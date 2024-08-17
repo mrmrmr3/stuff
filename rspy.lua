@@ -291,6 +291,8 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 	local Remotes = {}
 	
 	local function Connect(Remote: RemoteEvent | RemoteFunction)
+		if Remote.Parent.Name == "EntityInfo" then return end
+		
 		local NewRemote = NavTemp:Clone()
 		NewRemote.Name = Remote.Name
 		NewRemote.Parent = Container.Nav
