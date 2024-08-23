@@ -113,25 +113,15 @@ workspace.ChildAdded:Connect(WorkspaceAdded)
 
 local function AmbientAdded(Attachment: Attachment)
 	task.spawn(function()
-		repeat task.wait(0.1) until Attachment:FindFirstAncestorWhichIsA("Sound")
-
-		local Sound: Sound = Attachment:FindFirstChildWhichIsA("Sound")
-
-		if Attachment:IsA("Attachment") and Sound then
-			for _, Footstep: Sound in game.ReplicatedStorage.Footsteps:GetDescendants() do
-				if Footstep:IsA("Sound") then
-					if Sound.SoundId == Footstep.SoundId then
-						return
-					end
-				end
-			end
-			
-			local Ambience: Sound = Attachment:Clone()
-			Ambience.Parent = Sounds
-			
-			pcall(function()
-				Ambience:FindFirstChildWhichIsA("Sound"):Stop()
-				Ambience.TimePosition = 0
+		if Attachment:IsA("Attachment") then
+			Attachment.Destroying:Connect(function()
+				local Ambience: Sound = Attachment:Clone()
+				Ambience.Parent = Sounds
+				
+				pcall(function()
+					Ambience:FindFirstChildWhichIsA("Sound"):Stop()
+					Ambience.TimePosition = 0
+				end)
 			end)
 		end
 	end)
