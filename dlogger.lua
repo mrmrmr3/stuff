@@ -115,11 +115,11 @@ local function AmbientAdded(Attachment: Attachment)
 	task.spawn(function()
 		if Attachment:IsA("Attachment") then
 			Attachment.Destroying:Connect(function()
-				local Ambience: Sound = Attachment:Clone()
+				local Ambience: Sound = Attachment:FindFirstChildOfClass("Sound"):Clone()
 				Ambience.Parent = Sounds
 				
 				pcall(function()
-					Ambience:FindFirstChildWhichIsA("Sound"):Stop()
+					Ambience:Stop()
 					Ambience.TimePosition = 0
 				end)
 			end)
