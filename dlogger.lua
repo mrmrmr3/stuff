@@ -49,6 +49,14 @@ local function DeepClone(Object: Instance, Folder: Folder)
 	end)
 end
 
+local function findRoom(base)
+	for _, v in workspace.CurrentRooms:GetChildren() do
+		if base:IsDescendantOf(v) then
+			return v
+		end
+	end
+end
+
 local function DescendantAdded(Desc: BasePart | Instance)
 	local Attributes: {[string]: any} = Desc:GetAttributes()
 	local Module: string = Attributes.LoadModule
@@ -60,6 +68,7 @@ local function DescendantAdded(Desc: BasePart | Instance)
 	elseif Desc:IsA("BasePart") then
 		if Desc.CollisionGroup == "BaseCheck" then
 			DeepClone(Desc, Info)
+			Desc:SetAttribute("ROOM", findRoom(Desc):GetAttribute("Raw_Name"))
 		end
 	elseif Desc:IsA("BoolValue") and Desc.Name == "NearElevator" then
 		Desc:GetPropertyChangedSignal("Value"):Connect(function()
