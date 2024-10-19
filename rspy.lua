@@ -289,9 +289,14 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 	local NavTemp = Container.Nav.Nav_Template
 	
 	local Remotes = {}
+	local Blacklist = {
+		"MotorReplication",
+		"UpdateMinecartPosition"
+	}
 	
 	local function Connect(Remote: RemoteEvent | RemoteFunction)
 		if Remote.Parent.Name == "EntityInfo" then return end
+		if table.find(Blacklist, Remote.Name) then return end
 		
 		local NewRemote = NavTemp:Clone()
 		NewRemote.Name = Remote.Name
