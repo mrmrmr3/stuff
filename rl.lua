@@ -84,7 +84,7 @@ game.ReplicatedStorage.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Con
 						end
 						
 						local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
-						local fp2 = "siderooms/" .. fl .. "/" .. fn2
+						local fp2 = "_siderooms/" .. fl .. "/" .. fn2
 						local o2 = {}
 
 						o2.timeout = 16384
@@ -92,10 +92,10 @@ game.ReplicatedStorage.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Con
 						o2.mode = "invalid"
 						o2.ReadMe = false
 
-						o2.FilePath = fp
+						o2.FilePath = fp2
 						o2.Object = lr
 						
-						dec(o)
+						dec(o2)
 					end
 				end
 			end)
