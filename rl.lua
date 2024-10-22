@@ -96,9 +96,9 @@ end
 
 for i, v in workspace.CurrentRooms:GetChildren() do
 	task.spawn(function()
-		if not v:FindFirstChild("Assets") or i > game.ReplicatedStorage.GameData.LatestRoom.Value then continue end
-
-		decoroom(v)
+		if v:FindFirstChild("Assets") and i <= game.ReplicatedStorage.GameData.LatestRoom.Value then
+			decoroom(v)
+		end
 	end)
 end
 
