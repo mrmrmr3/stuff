@@ -88,7 +88,7 @@ local function decoroom(lr)
 end
 
 for i, v in workspace.CurrentRooms:GetChildren() do
-	if i == 1 or i > game.ReplicatedStorage.GameData.LatestRoom then continue end
+	if not v:FindFirstChild("Assets") or i > game.ReplicatedStorage.GameData.LatestRoom then continue end
 	
 	decoroom(v)
 end
