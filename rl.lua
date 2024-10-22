@@ -24,73 +24,77 @@ local fpmain = "_rooms/" .. (fl .. " - [" .. flts .. "] - [" .. gs .. "]")
 makefolder(fpmain)
 
 local function decoroom(lr)
-	local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
-	local fp = fpmain .. "/" .. fn
+	task.spawn(function()
+		if fl == "Backdoor" then
+			task.wait(0.5)
+		end
 
-	local o = {}
+		local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
+		local fp = fpmain .. "/" .. fn
 
-	o.timeout = 16384
-	o.noscripts = true
-	o.mode = "invalid"
-	o.ReadMe = false
+		local o = {}
 
-	o.FilePath = fp
-	o.Object = lr
+		o.timeout = 16384
+		o.noscripts = true
+		o.mode = "invalid"
+		o.ReadMe = false
 
-	if o.Object then
-		dec(o)
-		
-		task.spawn(function()
-			if not isfile("_siderooms") then
-				makefolder("_siderooms")
-			end
+		o.FilePath = fp
+		o.Object = lr
 
-			if not isfile("_siderooms/" .. fl) then
-				makefolder("_siderooms/" .. fl)
-			end
+		if o.Object then
+			dec(o)
 
-			for _, sr in lr:GetChildren() do
-				if sr.Name == "Sideroom" then
-					local siz = tostring(sr:GetAttribute("Weight"))
-					local bv = sr:GetExtentsSize()
-
-					if bv.X > 50 and bv.Z > 50 then
-						siz = "Big"
-					elseif bv.Y > 40 then
-						siz = "Tall"
-					elseif bv.Z > 40 then
-						siz = "Long"
-					elseif bv.Z > 50 then
-						siz = "Wide"
-					end
-
-					local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
-					local fp2 = "_siderooms/" .. fl .. "/" .. fn2
-					local o2 = {}
-
-					o2.timeout = 16384
-					o2.noscripts = true
-					o2.mode = "invalid"
-					o2.ReadMe = false
-
-					o2.FilePath = fp2
-					o2.Object = lr
-
-					dec(o2)
+			task.spawn(function()
+				if not isfile("_siderooms") then
+					makefolder("_siderooms")
 				end
-			end
-		end)
-		
-		return true
-	end
-	
-	return false
+
+				if not isfile("_siderooms/" .. fl) then
+					makefolder("_siderooms/" .. fl)
+				end
+
+				for _, sr in lr:GetChildren() do
+					if sr.Name == "Sideroom" then
+						local siz = tostring(sr:GetAttribute("Weight"))
+						local bv = sr:GetExtentsSize()
+
+						if bv.X > 50 and bv.Z > 50 then
+							siz = "Big"
+						elseif bv.Y > 40 then
+							siz = "Tall"
+						elseif bv.Z > 40 then
+							siz = "Long"
+						elseif bv.Z > 50 then
+							siz = "Wide"
+						end
+
+						local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
+						local fp2 = "_siderooms/" .. fl .. "/" .. fn2
+						local o2 = {}
+
+						o2.timeout = 16384
+						o2.noscripts = true
+						o2.mode = "invalid"
+						o2.ReadMe = false
+
+						o2.FilePath = fp2
+						o2.Object = lr
+
+						dec(o2)
+					end
+				end
+			end)
+		end
+	end)
 end
 
 for i, v in workspace.CurrentRooms:GetChildren() do
-	if not v:FindFirstChild("Assets") or i > game.ReplicatedStorage.GameData.LatestRoom then continue end
-	
-	decoroom(v)
+	task.spawn(function()
+		if not v:FindFirstChild("Assets") or i > game.ReplicatedStorage.GameData.LatestRoom.Value then continue end
+
+		decoroom(v)
+	end)
 end
 
 game.ReplicatedStorage.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Connect(function()
