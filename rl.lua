@@ -12,15 +12,86 @@ local function ts()
 end
 
 local fl = string.lower(tostring(game.ReplicatedStorage.GameData.Floor.Value))
+local gs = tostring(game.ReplicatedStorage.GameData.GameSeed.Value)
 
 if not isfile("_rooms") then
 	makefolder("_rooms")
 end
 
 local flts = ts()
-local fpmain = "_rooms/" .. (fl .. " - [" .. flts .. "]")
+local fpmain = "_rooms/" .. (fl .. " - [" .. flts .. "] - [" .. gs .. "]")
 
 makefolder(fpmain)
+
+local function decoroom(lr)
+	local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
+	local fp = fpmain .. "/" .. fn
+
+	local o = {}
+
+	o.timeout = 16384
+	o.noscripts = true
+	o.mode = "invalid"
+	o.ReadMe = false
+
+	o.FilePath = fp
+	o.Object = lr
+
+	if o.Object then
+		dec(o)
+		
+		task.spawn(function()
+			if not isfile("_siderooms") then
+				makefolder("_siderooms")
+			end
+
+			if not isfile("_siderooms/" .. fl) then
+				makefolder("_siderooms/" .. fl)
+			end
+
+			for _, sr in lr:GetChildren() do
+				if sr.Name == "Sideroom" then
+					local siz = tostring(sr:GetAttribute("Weight"))
+					local bv = sr:GetExtentsSize()
+
+					if bv.X > 50 and bv.Z > 50 then
+						siz = "Big"
+					elseif bv.Y > 40 then
+						siz = "Tall"
+					elseif bv.Z > 40 then
+						siz = "Long"
+					elseif bv.Z > 50 then
+						siz = "Wide"
+					end
+
+					local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
+					local fp2 = "_siderooms/" .. fl .. "/" .. fn2
+					local o2 = {}
+
+					o2.timeout = 16384
+					o2.noscripts = true
+					o2.mode = "invalid"
+					o2.ReadMe = false
+
+					o2.FilePath = fp2
+					o2.Object = lr
+
+					dec(o2)
+				end
+			end
+		end)
+		
+		return true
+	end
+	
+	return false
+end
+
+for i, v in workspace.CurrentRooms:GetChildren() do
+	if i == 1 or i > game.ReplicatedStorage.GameData.LatestRoom then continue end
+	
+	decoroom(v)
+end
 
 game.ReplicatedStorage.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Connect(function()
 	task.spawn(function()
@@ -43,62 +114,8 @@ game.ReplicatedStorage.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Con
 	local lr = workspace.CurrentRooms:FindFirstChild(tostring(game.ReplicatedStorage.GameData.LatestRoom.Value))
 
 	if lr then
-		local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
-		local fp = fpmain .. "/" .. fn
-
-		local o = {}
-
-		o.timeout = 16384
-		o.noscripts = true
-		o.mode = "invalid"
-		o.ReadMe = false
-
-		o.FilePath = fp
-		o.Object = lr
-
-		if o.Object then
-			dec(o)
-
-			task.spawn(function()
-				if not isfile("_siderooms") then
-					makefolder("_siderooms")
-				end
-
-				if not isfile("_siderooms/" .. fl) then
-					makefolder("_siderooms/" .. fl)
-				end
-
-				for _, sr in lr:GetChildren() do
-					if sr.Name == "Sideroom" then
-						local siz = tostring(sr:GetAttribute("Weight"))
-						local bv = sr:GetExtentsSize()
-
-						if bv.X > 50 and bv.Z > 50 then
-							siz = "Big"
-						elseif bv.Y > 40 then
-							siz = "Tall"
-						elseif bv.Z > 40 then
-							siz = "Long"
-						elseif bv.Z > 50 then
-							siz = "Wide"
-						end
-
-						local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
-						local fp2 = "_siderooms/" .. fl .. "/" .. fn2
-						local o2 = {}
-
-						o2.timeout = 16384
-						o2.noscripts = true
-						o2.mode = "invalid"
-						o2.ReadMe = false
-
-						o2.FilePath = fp2
-						o2.Object = lr
-
-						dec(o2)
-					end
-				end
-			end)
+		if decoroom(lr) == true then
+			
 		end
 	end
 end)
