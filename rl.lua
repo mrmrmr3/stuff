@@ -13,13 +13,18 @@ end
 
 local fl = string.lower(tostring(game.ReplicatedStorage.GameData.Floor.Value))
 local gs = tostring(game.ReplicatedStorage.GameData.GameSeed.Value)
+local fs = tostring(game.ReplicatedStorage.GameData.FloorSpecific.Value)
+
+if fs == "Default" then
+	fs = ""
+end
 
 if not isfile("_rooms") then
 	makefolder("_rooms")
 end
 
 local flts = ts()
-local fpmain = "_rooms/" .. (fl .. " - [" .. flts .. "] - [" .. gs .. "]")
+local fpmain = "_rooms/" .. (fl .. fs .. " - [" .. flts .. "] - [" .. gs .. "]")
 
 makefolder(fpmain)
 
