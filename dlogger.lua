@@ -122,7 +122,10 @@ local function DescendantAdded(Desc: BasePart | Instance)
 
 	if Desc:IsA("BasePart") then
 		if Desc.CollisionGroup == "BaseCheck" then
-			Desc:SetAttribute("ROOM", findRoom(Desc):GetAttribute("Raw_Name"))
+			pcall(function()
+				Desc:SetAttribute("ROOM", findRoom(Desc):GetAttribute("Raw_Name"))
+			end)
+			
 			DeepClone(Desc, Info)
 		end
 	elseif Desc:IsA("Folder") then
