@@ -34,9 +34,16 @@ Info.Parent = RoomsData
 
 local NewAttributes: Folder = Instance.new("Folder")
 NewAttributes.Name = "NewAttributes"
-NewAttributes.Parent = RoomsData
+NewAttributes.Parent = Leader
+
+local Stuff: Folder = Instance.new("Folder")
+Stuff.Name = "Stuff"
+Stuff.Parent = Leader
 
 -- Main
+
+local LocalPlayer = game.Players.LocalPlayer
+local Char = LocalPlayer.Character
 
 local attributesIndex = {}
 local function newAttribute(Name: string)
@@ -55,19 +62,42 @@ local function newAttribute(Name: string)
 	return na
 end
 
-game.Players.LocalPlayer.AttributeChanged:Connect(function(Name: string)
+LocalPlayer.AttributeChanged:Connect(function(Name: string)
 	local na = newAttribute(Name)
 
 	if na then
-		na.Value = tostring(game.Players.LocalPlayer:GetAttribute(Name))
+		na.Value = tostring(LocalPlayer:GetAttribute(Name))
 	end
 end)
 
-game.Players.LocalPlayer.Character.AttributeChanged:Connect(function(Name: string)
+Char.AttributeChanged:Connect(function(Name: string)
 	local na = newAttribute(Name)
 
 	if na then
-		na.Value = tostring(game.Players.LocalPlayer.Character:GetAttribute(Name))
+		na.Value = tostring(Char:GetAttribute(Name))
+	end
+end)
+
+Char.PrimaryPart.ChildAdded:Connect(function(child)
+	if child:IsA("Light") then
+		local start = os.clock()
+		
+		local newchild = child:Clone()
+		newchild.Parent = Stuff
+		
+		task.delay(0.05, function()
+			newchild:SetAttribute("SpeedBoost", Char:GetAttribute("SpeedBoost"))
+			newchild:SetAttribute("SpeedBoostExtra", Char:GetAttribute("SpeedBoostExtra"))
+			newchild:SetAttribute("StarlightSmall", Char:GetAttribute("StarlightSmall"))
+			newchild:SetAttribute("StarlightMedium", Char:GetAttribute("StarlightMedium"))
+			newchild:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
+		end)
+		
+		child:GetPropertyChangedSignal("Brightness"):Connect(function()
+			if child.Brightness == 0 then
+				newchild:SetAttribute("Duration", os.clock() - start)
+			end
+		end)
 	end
 end)
 
