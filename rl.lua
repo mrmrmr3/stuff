@@ -84,7 +84,7 @@ local function decoroom(lr)
 						o2.ReadMe = false
 
 						o2.FilePath = fp2
-						o2.Object = lr
+						o2.Object = sr
 
 						dec(o2)
 					end
