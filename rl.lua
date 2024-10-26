@@ -96,7 +96,7 @@ end
 
 for i, v in workspace.CurrentRooms:GetChildren() do
 	task.spawn(function()
-		if v:FindFirstChild("Assets") and i <= game.ReplicatedStorage.GameData.LatestRoom.Value then
+		if v:FindFirstChild("Assets") and i <= math.max(game.ReplicatedStorage.GameData.LatestRoom.Value, 1) then
 			decoroom(v)
 		end
 	end)
