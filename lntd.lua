@@ -12,6 +12,7 @@ end
 
 workspace.DescendantAdded:Connect(function(obj)
 	if obj:IsDescendantOf(workspace.CurrentRooms) then return end
+	if obj:IsDescendantOf(game.Players.LocalPlayer.Character) then return end
 	
 	local Options = {}
 	local FileName
