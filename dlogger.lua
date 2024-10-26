@@ -137,13 +137,6 @@ local function DescendantAdded(Object: BasePart | Instance)
 			local new = Object:Clone()
 			Object.Parent = EntityData
 		end)
-
-		--[[task.delay(0.1, function()
-			if Object then
-				local new = Object:Clone()
-				Object.Parent = EntityData
-			end
-		end)]]
 		
 		for i = 0, 5 do
 			task.spawn(function()
@@ -165,14 +158,18 @@ local function WorkspaceAdded(Object: Instance)
 	if Object:IsA("Model") then
 		if Object.Name == "Repentance" then
 			local Time = os.clock()
+			local Index = 0
 
 			task.spawn(function()
 				while true do
 					if (os.clock() - Time) >= 30 or not Object.Parent then
 						break
 					end
+					
+					Index += 1
 
 					local Crux: Model = Object:Clone()
+					Crux.Name = "Repentance" .. Index
 					Crux.Parent = Repentance
 
 					task.wait(0.5)
