@@ -101,8 +101,8 @@ Char.PrimaryPart.ChildAdded:Connect(function(child)
 	end
 end)
 
-local function DeepClone(Object: Instance, Folder: Folder)
-	task.delay(0.5, function()
+local function DeepClone(Object: Instance, Folder: Folder, Time: number)
+	task.delay(Time or 0.5, function()
 		local Object1: Instance = Object:Clone()
 		Object1.Parent = Folder or Misc
 	end)
@@ -116,21 +116,39 @@ local function findRoom(base)
 	end
 end
 
-local function DescendantAdded(Desc: BasePart | Instance)
-	local Attributes: {[string]: any} = Desc:GetAttributes()
+local function DescendantAdded(Object: BasePart | Instance)
+	local Attributes: {[string]: any} = Object:GetAttributes()
 	local Module: string = Attributes.LoadModule
 
-	if Desc:IsA("BasePart") then
-		if Desc.CollisionGroup == "BaseCheck" then
+	if Object:IsA("BasePart") then
+		if Object.CollisionGroup == "BaseCheck" then
 			pcall(function()
-				Desc:SetAttribute("ROOM", findRoom(Desc):GetAttribute("Raw_Name"))
+				Object:SetAttribute("ROOM", findRoom(Object):GetAttribute("Raw_Name"))
 			end)
 			
-			DeepClone(Desc, Info)
+			DeepClone(Object, Info)
 		end
-	elseif Desc:IsA("Folder") then
-		if Desc.Name == "PathfindNodes" then
-			DeepClone(Desc, Info)
+	elseif Object:IsA("Folder") then
+		if Object.Name == "PathfindNodes" then
+			DeepClone(Object, Info)
+		end
+	elseif string.find(string.lower(Object.Name), "mobble") or string.find(string.lower(Object.Name), "jack") then
+		Object.Destroying:Once(function()
+			local new = Object:Clone()
+			Object.Parent = EntityData
+		end)
+
+		--[[task.delay(0.1, function()
+			if Object then
+				local new = Object:Clone()
+				Object.Parent = EntityData
+			end
+		end)]]
+		
+		for i = 0, 5 do
+			task.spawn(function()
+				DeepClone(Object, EntityData, i / 10)
+			end)
 		end
 	end
 end
@@ -158,18 +176,6 @@ local function WorkspaceAdded(Object: Instance)
 					Crux.Parent = Repentance
 
 					task.wait(0.5)
-				end
-			end)
-		elseif string.find(string.lower(Object.Name), "mobble") or string.find(string.lower(Object.Name), "jack") then
-			Object.Destroying:Once(function()
-				local new = Object:Clone()
-				Object.Parent = EntityData
-			end)
-			
-			task.delay(0.1, function()
-				if Object then
-					local new = Object:Clone()
-					Object.Parent = EntityData
 				end
 			end)
 		end
