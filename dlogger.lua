@@ -91,11 +91,31 @@ Char.PrimaryPart.ChildAdded:Connect(function(child)
 			newchild:SetAttribute("StarlightSmall", Char:GetAttribute("StarlightSmall"))
 			newchild:SetAttribute("StarlightMedium", Char:GetAttribute("StarlightMedium"))
 			newchild:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
+			newchild:SetAttribute("LastCandy", Char:GetAttribute("LastCandy"))
 		end)
+		
+		for i, _ in newchild:GetAttributes() do
+			if string.find(i, "Starlight") then
+				newchild.Name = i
+				
+				break
+			end
+		end
 		
 		child:GetPropertyChangedSignal("Brightness"):Connect(function()
 			if child.Brightness == 0 then
 				newchild:SetAttribute("Duration", os.clock() - start)
+				
+				local new2 = child:Clone()
+				
+				new2.Name = "End"
+				new2.Parent = newchild
+				new2:SetAttribute("SpeedBoost", Char:GetAttribute("SpeedBoost"))
+				new2:SetAttribute("SpeedBoostExtra", Char:GetAttribute("SpeedBoostExtra"))
+				new2:SetAttribute("StarlightSmall", Char:GetAttribute("StarlightSmall"))
+				new2:SetAttribute("StarlightMedium", Char:GetAttribute("StarlightMedium"))
+				new2:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
+				new2:SetAttribute("LastCandy", Char:GetAttribute("LastCandy"))
 			end
 		end)
 	end
