@@ -11,8 +11,8 @@ local function ts()
 end
 
 workspace.DescendantAdded:Connect(function(obj)
-	if obj:IsDescendantOf(workspace.CurrentRooms) then return end
-	if obj:IsDescendantOf(game.Players.LocalPlayer.Character) then return end
+	--if obj:IsDescendantOf(workspace.CurrentRooms) then return end
+	--if obj:IsDescendantOf(game.Players.LocalPlayer.Character) then return end
 	
 	local Options = {}
 	local FileName
@@ -22,7 +22,7 @@ workspace.DescendantAdded:Connect(function(obj)
 	Options.mode = "invalid"
 	Options.ReadMe = false
 	
-	if obj:GetAttribute("Pickup") and ((cache["loot_" .. obj.Name] or 0) < 20) then
+	if obj:GetAttribute("Pickup") and ((cache["loot_" .. obj.Name] or 0) < 20) and not cache[obj] then
 		FileName = obj:GetAttribute("Pickup") .. " - [" .. tostring(os.date("%I-%M-%S")) .. "]"
 
 		Options.FilePath = "_items/loot/" .. FileName
@@ -31,6 +31,8 @@ workspace.DescendantAdded:Connect(function(obj)
 		if obj.Name ~= "Candy" then
 			cache["loot_" .. obj.Name] = (cache["loot_" .. obj.Name] or 0) + 1 
 		end
+		
+		cache[obj] = true
 		
 		task.wait(0.1)
 	end
@@ -45,14 +47,12 @@ workspace.DescendantAdded:Connect(function(obj)
 	end
 end)
 
-local indexed = {}
-
 game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(item)
-	if table.find(indexed, item) or ((cache["tool_" .. item.Name] or 0) >= 20) then
+	if cache[item] or ((cache["tool_" .. item.Name] or 0) >= 20) then
 		return
 	end
 	
-	table.insert(indexed, item)
+	cache[item] = true
 	
 	if item.Name ~= "Candy" then
 		cache["tool_" .. item.Name] = (cache["tool_" .. item.Name] or 0) + 1 
