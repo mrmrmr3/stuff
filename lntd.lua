@@ -14,6 +14,14 @@ workspace.DescendantAdded:Connect(function(obj)
 	--if obj:IsDescendantOf(workspace.CurrentRooms) then return end
 	--if obj:IsDescendantOf(game.Players.LocalPlayer.Character) then return end
 	
+	if obj:IsDescendantOf(workspace.Drops) then
+		task.wait(0.5)
+		
+		if game.Players.LocalPlayer:GetAttribute("Alive") == true then
+			return
+		end
+	end
+	
 	local Options = {}
 	local FileName
 	
@@ -32,7 +40,9 @@ workspace.DescendantAdded:Connect(function(obj)
 			cache["loot_" .. obj.Name] = (cache["loot_" .. obj.Name] or 0) + 1 
 		end
 		
-		cache[obj] = true
+		obj = obj:Clone()
+		
+		game.Debris:AddItem(obj, 30)
 		
 		task.wait(0.1)
 	end
@@ -57,6 +67,10 @@ game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(item)
 	if item.Name ~= "Candy" then
 		cache["tool_" .. item.Name] = (cache["tool_" .. item.Name] or 0) + 1 
 	end
+	
+	item = item:Clone()
+
+	game.Debris:AddItem(item, 30)
 	
 	task.delay(0.1, function()
 		local FileName = item.Name .. " - [" .. tostring(os.date("%I-%M-%S")) .. "]"
