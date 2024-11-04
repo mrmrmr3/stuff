@@ -10,37 +10,21 @@ local function ts()
 	return tostring(os.date("%I-%M-%S"))
 end
 
+local lootholders = {}
+
 workspace.DescendantAdded:Connect(function(obj)
-	local Options = {}
-	local FileName
-	
-	Options.timeout = 16384
-	Options.noscripts = true
-	Options.mode = "invalid"
-	Options.ReadMe = false
-	
 	if obj:IsA("BasePart") then
 		if obj.Name == "LootHolder" then
 			local storage = obj:GetAttribute("Storage") or obj:FindFirstAncestorOfClass("Model"):GetAttribute("Storage") or "default"
-			
+
 			if not isfile("_misc/lootholders/" .. storage) then
 				makefolder("_misc/lootholders/" .. storage)
 			end
 			
-			Options.FilePath = "_misc/lootholders/" .. storage
-			Options.Object = obj
+			task.wait(0.1)
+
+			table.insert(lootholders, obj:Clone())
 		end
-	end
-	
-	if Options.Object then
-		task.wait(0.1)
-		
-		local Params = {
-			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-			SSI = "saveinstance",
-		}
-		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-		synsaveinstance(Options)
 	end
 end)
 
@@ -53,7 +37,34 @@ r.DeathHint.OnClientEvent:Connect(function(stuff, light)
 		"ROOMNUM : " .. game.ReplicatedStorage.GameData.LatestRoom.Value
 	}
 	
-	local res = table.concat(stuff, "\n")
+	for _, v in stuff do
+		table.insert(base, v)
+	end
+	
+	local res = table.concat(base, "\n")
 	
 	writefile("_misc/death_messages [" .. floor .. "]/" .. "[" .. ts() .. "]", res)
+	
+	local Options = {}
+	local FileName = ts()
+
+	Options.timeout = 16384
+	Options.noscripts = true
+	Options.mode = "invalid"
+	Options.ReadMe = false
+	Options.ExtraInstances = {}
+	Options.FilePath = "_misc/lootholders/" .. floor .. "/" ..FileName
+
+	for _, obj in lootholders do
+		table.insert(Options.ExtraInstances, obj)
+	end
+
+	task.wait(0.1)
+
+	local Params = {
+		RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+		SSI = "saveinstance",
+	}
+	local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+	synsaveinstance(Options)
 end)
