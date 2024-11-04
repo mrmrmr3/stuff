@@ -12,6 +12,9 @@ end
 
 local lootholders = {}
 
+local lh = Instance.new("Folder", game.ReplicatedStorage.GAME_DATA.Stuff)
+lh.Name = "LootHolders"
+
 workspace.DescendantAdded:Connect(function(obj)
 	if obj:IsA("BasePart") then
 		if obj.Name == "LootHolder" then
@@ -22,8 +25,12 @@ workspace.DescendantAdded:Connect(function(obj)
 			end
 			
 			task.wait(0.1)
+			
+			local ob = obj:Clone()
+			ob.Parent = lh
+			ob:PivotTo(CFrame.new(10 * #lootholders, 0, 0))
 
-			table.insert(lootholders, obj:Clone())
+			table.insert(lootholders, ob)
 		end
 	end
 end)
@@ -34,7 +41,8 @@ r.DeathHint.OnClientEvent:Connect(function(stuff, light)
 	local base = {
 		"DIED TO : " .. game.Players.LocalPlayer.Character:GetAttribute("DeathCause"),
 		"REASON : " .. game.Players.LocalPlayer.Character:GetAttribute("DeathReason"),
-		"ROOMNUM : " .. game.ReplicatedStorage.GameData.LatestRoom.Value
+		"ROOMNUM : " .. game.ReplicatedStorage.GameData.LatestRoom.Value,
+		"-----------"
 	}
 	
 	for _, v in stuff do
@@ -43,28 +51,28 @@ r.DeathHint.OnClientEvent:Connect(function(stuff, light)
 	
 	local res = table.concat(base, "\n")
 	
-	writefile("_misc/death_messages [" .. floor .. "]/" .. "[" .. ts() .. "]", res)
-	
-	local Options = {}
-	local FileName = ts()
+	writefile("_misc/death_messages [" .. floor .. "]/" .. "[" .. ts() .. "].txt", res)
+end)
 
-	Options.timeout = 16384
-	Options.noscripts = true
-	Options.mode = "invalid"
-	Options.ReadMe = false
-	Options.ExtraInstances = {}
-	Options.FilePath = "_misc/lootholders/" .. floor .. "/" ..FileName
+game.Players.LocalPlayer.Character:GetAttributeChangedSignal("Alive"):Connect(function()
+	if game.Players.LocalPlayer.Character:GetAttribute("Alive") ~= true then
+		local Options = {}
+		local FileName = ts()
 
-	for _, obj in lootholders do
-		table.insert(Options.ExtraInstances, obj)
+		Options.timeout = 16384
+		Options.noscripts = true
+		Options.mode = "invalid"
+		Options.ReadMe = false
+		Options.Object = lh
+		Options.FilePath = "_misc/lootholders/" .. floor .. "/" ..FileName
+
+		task.wait(0.1)
+
+		local Params = {
+			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+			SSI = "saveinstance",
+		}
+		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+		synsaveinstance(Options)
 	end
-
-	task.wait(0.1)
-
-	local Params = {
-		RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-		SSI = "saveinstance",
-	}
-	local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-	synsaveinstance(Options)
 end)
