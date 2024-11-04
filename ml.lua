@@ -2,12 +2,15 @@ local floor = game.ReplicatedStorage.GameData.Floor.Value
 
 if not isfile("_misc") then
 	makefolder("_misc")
-	makefolder("_misc/death_messages [" .. floor .. "]")
 	makefolder("_misc/lootholders")
 end
 
+if not isfile("_misc/death_messages [" .. floor .. "]") then
+	makefolder("_misc/death_messages [" .. floor .. "]")
+end
+
 local function ts()
-	return tostring(os.date("%I-%M-%S"))
+	return tostring(os.date("%Y-%m-%d %H-%M-%S"))
 end
 
 local lootholders = {}
@@ -28,7 +31,7 @@ workspace.DescendantAdded:Connect(function(obj)
 			
 			local ob = obj:Clone()
 			ob.Parent = lh
-			ob:PivotTo(CFrame.new(10 * #lootholders, 0, 0))
+			ob:PivotTo(CFrame.new(7 * #lootholders, 0, 0))
 
 			table.insert(lootholders, ob)
 		end
@@ -57,7 +60,7 @@ end)
 game.Players.LocalPlayer.Character:GetAttributeChangedSignal("Alive"):Connect(function()
 	if game.Players.LocalPlayer.Character:GetAttribute("Alive") ~= true then
 		local Options = {}
-		local FileName = ts()
+		local FileName = tostring(os.date("%H-%M-%S"))
 
 		Options.timeout = 16384
 		Options.noscripts = true
