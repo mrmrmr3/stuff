@@ -51,7 +51,7 @@ local UICorner_12 = Instance.new("UICorner")
 --Properties:
 
 _rs.Name = "_rs"
-_rs.Parent = game.CoreGui
+_rs.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 _rs.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 main.Name = "main"
@@ -226,7 +226,7 @@ arg.BorderColor3 = Color3.fromRGB(0, 0, 0)
 arg.BorderSizePixel = 0
 arg.Visible = false
 arg.Font = Enum.Font.Montserrat
-arg.Text = ""
+arg.Text = "[1]: game.Workspace.CurrentRooms.100._DamHandler.Flood1.RandomLightAttach.PointLight"
 arg.TextColor3 = Color3.fromRGB(255, 255, 255)
 arg.TextSize = 36.000
 arg.TextXAlignment = Enum.TextXAlignment.Left
@@ -417,9 +417,9 @@ remotes_2.AnchorPoint = Vector2.new(0.5, 0)
 remotes_2.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 remotes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 remotes_2.BorderSizePixel = 0
-remotes_2.Position = UDim2.new(0.574999988, 0, 0.00899999961, 0)
+remotes_2.Position = UDim2.new(0.574999988, 0, 0.0149999997, 0)
 remotes_2.Selectable = false
-remotes_2.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
+remotes_2.Size = UDim2.new(0.0599999987, 0, 0.0599999987, 0)
 remotes_2.ZIndex = 3
 remotes_2.AutoButtonColor = false
 remotes_2.Font = Enum.Font.GothamMedium
@@ -434,78 +434,10 @@ UIAspectRatioConstraint_6.Parent = remotes_2
 UICorner_12.CornerRadius = UDim.new(0.200000003, 0)
 UICorner_12.Parent = remotes_2
 
--- Module Scripts:
-
-local fake_module_scripts = {}
-
-do -- nil.convert
-	local script = Instance.new('ModuleScript', nil)
-	script.Name = "convert"
-	local function module_script()
-		local stringify
-		
-		stringify = function(v, spaces, usesemicolon, depth)
-			if type(v) ~= 'table' then
-				if type(v) == "string" then
-					return tostring(`"{v}"`)
-				elseif typeof(v) == "Vector3" then
-					return tostring(`Vector3.new({v})`)
-				elseif typeof(v) == "Color3" then
-					local r = math.floor(v.R * 255)
-					local g = math.floor(v.G * 255)
-					local b = math.floor(v.B * 255)
-		
-					return tostring(`Color3.fromRGB({r}, {g}, {b})`)
-				elseif typeof(v) == "CFrame" then
-					return tostring(`CFrame.new({v})`)
-		
-				elseif typeof(v) == "Vector2" then
-					return tostring(`Vector2.new({v})`)
-				
-				elseif typeof(v) == "Instance" then
-					return tostring(v:GetFullName())
-				end
-		
-				return tostring(v)
-			elseif not next(v) then
-				return '{}'
-			end
-		
-			spaces = spaces or 4
-			depth = depth or 1
-		
-			local space = (" "):rep(depth * spaces)
-			local sep = usesemicolon and ";" or ","
-			local s = "{"
-		
-			for k, x in next, v do
-				local kt = type(k)
-				local thing = kt == 'number' and tostring(k)
-		
-				s = s .. ("\n%s[%s] = %s%s"):format(space, thing or ('"%s"'):format(tostring(k)), stringify(x, spaces, usesemicolon, depth + 1), sep)
-			end
-		
-			return ("%s\n%s}"):format(s:sub(1,-2), space:sub(1, -spaces-1))
-		end
-		
-		return stringify
-	end
-	fake_module_scripts[script] = module_script
-end
-
-
 -- Scripts:
 
-local function JUWALNT_fake_script() -- _rs.LocalScript 
+local function CAMBRI_fake_script() -- _rs.LocalScript 
 	local script = Instance.new('LocalScript', _rs)
-	local req = require
-	local require = function(obj)
-		local fake = fake_module_scripts[obj]
-		if fake then
-			return fake()
-		end
-		return req(obj)
-	end
 
 	print("initializing inbound remote viewer")
 	
@@ -567,11 +499,56 @@ local function JUWALNT_fake_script() -- _rs.LocalScript
 		script.Parent.remotes.Visible = false
 	end)
 	
+	local _conv
+	
+	_conv = function(v, spaces, usesemicolon, depth)
+		if type(v) ~= 'table' then
+			if type(v) == "string" then
+				return tostring(`"{v}"`)
+			elseif typeof(v) == "Vector3" then
+				return tostring(`Vector3.new({v})`)
+			elseif typeof(v) == "Color3" then
+				local r = math.floor(v.R * 255)
+				local g = math.floor(v.G * 255)
+				local b = math.floor(v.B * 255)
+	
+				return tostring(`Color3.fromRGB({r}, {g}, {b})`)
+			elseif typeof(v) == "CFrame" then
+				return tostring(`CFrame.new({v})`)
+	
+			elseif typeof(v) == "Vector2" then
+				return tostring(`Vector2.new({v})`)
+	
+			elseif typeof(v) == "Instance" then
+				return tostring(v:GetFullName())
+			end
+	
+			return tostring(v)
+		elseif not next(v) then
+			return '{}'
+		end
+	
+		spaces = spaces or 4
+		depth = depth or 1
+	
+		local space = (" "):rep(depth * spaces)
+		local sep = usesemicolon and ";" or ","
+		local s = "{"
+	
+		for k, x in next, v do
+			local kt = type(k)
+			local thing = kt == 'number' and tostring(k)
+	
+			s = s .. ("\n%s[%s] = %s%s"):format(space, thing or ('"%s"'):format(tostring(k)), _conv(x, spaces, usesemicolon, depth + 1), sep)
+		end
+	
+		return ("%s\n%s}"):format(s:sub(1,-2), space:sub(1, -spaces-1))
+	end
+	
 	local _connections: {[RemoteEvent]: RBXScriptConnection} = {}
 	local _totalArgs = {}
 	local _uiargs = {}
 	local _index = 0
-	local _conv = require(script.convert)
 	local _blacklist = {
 		"RandomLightAttachment",
 		"DrawerContainer"
@@ -724,4 +701,4 @@ local function JUWALNT_fake_script() -- _rs.LocalScript
 		end)
 	end)
 end
-coroutine.wrap(JUWALNT_fake_script)()
+coroutine.wrap(CAMBRI_fake_script)()
