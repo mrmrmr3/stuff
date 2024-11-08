@@ -30,10 +30,10 @@ workspace.DescendantAdded:Connect(function(obj)
 			local new = lh:FindFirstChild(storage)
 			
 			if not new then
-				new:SetAttribute("offset", #lh:GetChildren())
 				new = Instance.new("Folder")
 				new.Parent = lh
 				new.Name = storage
+				new:SetAttribute("offset", #lh:GetChildren())
 			end
 			
 			task.wait(0.1)
@@ -110,13 +110,18 @@ end
 
 r.Statistics.OnClientEvent:Connect(function(st, two)
 	table.insert(dm, stringify(st))
+	table.insert(dm, "-----------")
+	
+	pcall(function()
+		table.insert(dm, stringify(require(game.ReplicatedStorage.ReplicaDataModule).players[game.Players.LocalPlayer.Name].data.DialogueLog))
+	end)
 	
 	local res = table.concat(dm, "\n")
 
 	writefile("_misc/death_messages [" .. floor .. "]/" .. "[" .. ts() .. "].txt", res)
 	
 	local Options = {}
-	local FileName = tostring(os.date("%H-%M-%S"))
+	local FileName = "lh_" .. floor .. "_" tostring(os.date("%H-%M-%S"))
 
 	Options.timeout = 16384
 	Options.noscripts = true
@@ -126,6 +131,29 @@ r.Statistics.OnClientEvent:Connect(function(st, two)
 	Options.FilePath = "_misc/lootholders/" .. floor .. "/" .. FileName
 
 	task.wait(0.1)
+	
+	task.spawn(function()
+		for _, v in lh:GetChildren() do
+			task.spawn(function()
+				local o2 = {}
+				local fn2 = "lh_" .. v.Name .."_" .. tostring(os.date("%H-%M-%S"))
+
+				o2.timeout = 16384
+				o2.noscripts = true
+				o2.mode = "invalid"
+				o2.ReadMe = false
+				o2.Object = lh
+				o2.FilePath = "_misc/lootholders/" .. v.Name .. "/" .. fn2
+
+				local Params = {
+					RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+					SSI = "saveinstance",
+				}
+				local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+				synsaveinstance(o2)
+			end)
+		end
+	end)
 
 	local Params = {
 		RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
