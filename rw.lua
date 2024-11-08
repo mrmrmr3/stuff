@@ -935,7 +935,7 @@ local function GTYZ_fake_script() -- _rs.LocalScript
 	
 	for i, remote: RemoteEvent in _REMOTESLIST do
 		if not remote:IsA("RemoteEvent") then
-			return
+			continue
 		end
 		
 		task.spawn(function()
