@@ -704,7 +704,7 @@ local function MLUU_fake_script() -- _rs.LocalScript
 			local fileName = (game.ReplicatedStorage.GameData.Floor.Value) .. "_" .. tostring(os.date("%H-%M-%S"))
 			local filePath = "_remotelogs/" .. fileName
 	
-			writefile(filePath, _conv(_totalArgs))
+			writefile(filePath .. ".txt", _conv(_totalArgs))
 		end)
 	end)
 
