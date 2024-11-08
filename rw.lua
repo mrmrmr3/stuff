@@ -632,7 +632,7 @@ filename.LayoutOrder = -1
 filename.Position = UDim2.new(0.5, 0, 0.474000007, 0)
 filename.Selectable = false
 filename.Size = UDim2.new(0.850000024, 0, 0.850000024, 0)
-filename.ZIndex = 11
+filename.ZIndex = 15
 filename.Font = Enum.Font.Gotham
 filename.PlaceholderColor3 = Color3.fromRGB(207, 207, 207)
 filename.PlaceholderText = "Name"
@@ -640,6 +640,10 @@ filename.Text = ""
 filename.TextColor3 = Color3.fromRGB(255, 255, 255)
 filename.TextScaled = true
 filename.TextWrapped = true
+filename.TextEditable = true
+filename.Interactable = true
+filename.ClearTextOnFocus = true
+filename.ShowNativeInput = true
 filename.TextXAlignment = Enum.TextXAlignment.Left
 
 UIAspectRatioConstraint_8.Parent = filename
@@ -757,7 +761,7 @@ remotes_2.AnchorPoint = Vector2.new(0.5, 0)
 remotes_2.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 remotes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 remotes_2.BorderSizePixel = 0
-remotes_2.Position = UDim2.new(0.574999988, 0, 0.0130000003, 0)
+remotes_2.Position = UDim2.new(0.574999988, 0, 0.0149999997, 0)
 remotes_2.Selectable = false
 remotes_2.Size = UDim2.new(0.0599999987, 0, 0.0599999987, 0)
 remotes_2.ZIndex = 3
@@ -776,7 +780,7 @@ UICorner_20.Parent = remotes_2
 
 -- Scripts:
 
-local function BGVG_fake_script() -- _rs.LocalScript 
+local function FUCNYZO_fake_script() -- _rs.LocalScript 
 	local script = Instance.new('LocalScript', _rs)
 
 	print("initializing inbound remote viewer")
@@ -842,9 +846,7 @@ local function BGVG_fake_script() -- _rs.LocalScript
 		script.Parent.remotes.Visible = false
 	end)
 	
-	local _conv
-	
-	_conv = function(v, spaces, usesemicolon, depth)
+	function _conv(v, spaces, usesemicolon, depth, dontConvertNumber: boolean)
 		if type(v) ~= 'table' then
 			if type(v) == "string" then
 				return tostring(`"{v}"`)
@@ -879,8 +881,8 @@ local function BGVG_fake_script() -- _rs.LocalScript
 		local s = "{"
 	
 		for k, x in next, v do
-			local kt = type(k)
-			local thing = kt == 'number' and tostring(k)
+			local kt = type(v)
+			local thing = dontConvertNumber ~= true and kt == 'number' and tostring(v)
 	
 			s = s .. ("\n%s[%s] = %s%s"):format(space, thing or ('"%s"'):format(tostring(k)), _conv(x, spaces, usesemicolon, depth + 1), sep)
 		end
@@ -955,7 +957,6 @@ local function BGVG_fake_script() -- _rs.LocalScript
 		temp.Visible = true
 		temp.LayoutOrder = i
 		temp.Parent = main.togglelist
-		temp:SetAttribute("OriginalName", name)
 		
 		temp.MouseButton1Up:Connect(function()
 			if _connections[remote] then
@@ -963,12 +964,12 @@ local function BGVG_fake_script() -- _rs.LocalScript
 				_connections[remote] = nil
 				
 				temp:SetAttribute("enabled", false)
-				temp.Name = "_" .. temp:GetAttribute("OriginalName")
+				temp.Name = "_" .. name
 				
 				temp.BackgroundColor3 = ogc
 			else
 				temp:SetAttribute("enabled", true)
-				temp.Name = temp:GetAttribute("OriginalName")
+				temp.Name = name
 				temp.BackgroundColor3 = Color3.fromRGB(77, 223, 99)
 				
 				_connections[remote] = remote.OnClientEvent:Connect(function(...)
@@ -1089,7 +1090,7 @@ local function BGVG_fake_script() -- _rs.LocalScript
 		saves += 1
 		
 		pcall(function()
-			print("saved")
+			print("saved", name)
 			
 			if not isfile("_remotelogs") then
 				makefolder("_remotelogs")
@@ -1097,7 +1098,7 @@ local function BGVG_fake_script() -- _rs.LocalScript
 	
 			local filePath = "_remotelogs/" .. name .. "_" .. tostring(saves)
 	
-			writefile(filePath .. ".txt", _conv(_totalArgs))
+			writefile(filePath .. ".txt", _conv(_totalArgs, 4, false, 1, true))
 		end)
 		
 		popup.Visible = false
@@ -1107,4 +1108,4 @@ local function BGVG_fake_script() -- _rs.LocalScript
 	
 	main.togglelist.CanvasSize = UDim2.new(0, o.X, 0, o.Y)
 end
-coroutine.wrap(BGVG_fake_script)()
+coroutine.wrap(FUCNYZO_fake_script)()
