@@ -552,7 +552,8 @@ local function MLUU_fake_script() -- _rs.LocalScript
 	local _index = 0
 	local _blacklist = {
 		"RandomLightAttachment",
-		"DrawerContainer"
+		"DrawerContainer",
+		"Minecart"
 	}
 	
 	main.clear.MouseButton1Up:Connect(function()
@@ -592,6 +593,7 @@ local function MLUU_fake_script() -- _rs.LocalScript
 		temp.MouseButton1Up:Connect(function()
 			if _connections[remote] then
 				_connections[remote]:Disconnect()
+				_connections[remote] = nil
 				
 				temp.BackgroundColor3 = ogc
 			else
@@ -693,8 +695,6 @@ local function MLUU_fake_script() -- _rs.LocalScript
 		end)
 	end
 	
-	--main.togglelist.CanvasSize = main.togglelist.UIListLayout.AbsoluteContentSize + Vector2.new(0, 40)
-	
 	main.save.MouseButton1Up:Connect(function()
 		pcall(function()
 			if not isfile("_remotelogs") then
@@ -707,5 +707,7 @@ local function MLUU_fake_script() -- _rs.LocalScript
 			writefile(filePath, _conv(_totalArgs))
 		end)
 	end)
+
+	main.togglelist.CanvasSize = main.togglelist.UIListLayout.AbsoluteContentSize + Vector2.new(0, 40)
 end
 coroutine.wrap(MLUU_fake_script)()
