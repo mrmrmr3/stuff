@@ -81,6 +81,7 @@ togglelist.Visible = false
 togglelist.ZIndex = 5
 togglelist.CanvasSize = UDim2.new(0, 0, 0, 0)
 togglelist.ScrollBarThickness = 8
+togglelist.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 UIListLayout.Parent = togglelist
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -136,6 +137,7 @@ inboundlist.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
 inboundlist.ZIndex = 5
 inboundlist.CanvasSize = UDim2.new(0, 0, 0, 0)
 inboundlist.ScrollBarThickness = 8
+inboundlist.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 _ATemplate.Name = "_ATemplate"
 _ATemplate.Parent = inboundlist
@@ -214,6 +216,7 @@ args.Selectable = false
 args.Size = UDim2.new(1, 0, 0.824999988, 0)
 args.CanvasSize = UDim2.new(0, 0, 0, 0)
 args.ScrollBarThickness = 8
+args.AutomaticCanvasSize = Enum.AutomaticSize.XY
 
 UICorner_5.CornerRadius = UDim.new(0.0500000007, 0)
 UICorner_5.Parent = args
@@ -230,6 +233,7 @@ arg.Text = "[1]: game.Workspace.CurrentRooms.100._DamHandler.Flood1.RandomLightA
 arg.TextColor3 = Color3.fromRGB(255, 255, 255)
 arg.TextSize = 36.000
 arg.TextXAlignment = Enum.TextXAlignment.Left
+arg.RichText = true
 
 UIListLayout_2.Parent = args
 UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
@@ -687,8 +691,6 @@ local function CAMBRI_fake_script() -- _rs.LocalScript
 	end
 	
 	main.save.MouseButton1Up:Connect(function()
-		print(_conv(_totalArgs))
-	
 		pcall(function()
 			if not isfile("_remotelogs") then
 				makefolder("_remotelogs")
@@ -697,7 +699,7 @@ local function CAMBRI_fake_script() -- _rs.LocalScript
 			local fileName = (game.ReplicatedStorage.GameData.Floor.Value) .. "_" .. tostring(os.date("%H-%M-%S"))
 			local filePath = "_remotelogs/" .. fileName
 	
-			writefile(filePath, _conv(_totalArgs))
+			writefile(filePath .. ".txt", _conv(_totalArgs))
 		end)
 	end)
 end
