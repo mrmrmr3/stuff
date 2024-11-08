@@ -79,12 +79,10 @@ togglelist.Selectable = false
 togglelist.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
 togglelist.Visible = false
 togglelist.ZIndex = 5
-togglelist.CanvasSize = UDim2.new(0, 0, 0, 0)
+togglelist.CanvasSize = UDim2.new(0, 0, 0, 40)
 togglelist.ScrollBarThickness = 8
-togglelist.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 UIListLayout.Parent = togglelist
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0.00999999978, 0)
 
 _RTemplate.Name = "_RTemplate"
@@ -94,6 +92,7 @@ _RTemplate.BorderColor3 = Color3.fromRGB(0, 0, 0)
 _RTemplate.BorderSizePixel = 0
 _RTemplate.Size = UDim2.new(1, 0, 0.075000003, 0)
 _RTemplate.Visible = false
+_RTemplate.ZIndex = 6
 _RTemplate.Font = Enum.Font.Montserrat
 _RTemplate.Text = "TweenEvent"
 _RTemplate.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -135,9 +134,8 @@ inboundlist.Position = UDim2.new(0.5, 0, 0.975000024, 0)
 inboundlist.Selectable = false
 inboundlist.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
 inboundlist.ZIndex = 5
-inboundlist.CanvasSize = UDim2.new(0, 0, 0, 0)
+inboundlist.CanvasSize = UDim2.new(0, 0, 0, 40)
 inboundlist.ScrollBarThickness = 8
-inboundlist.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
 _ATemplate.Name = "_ATemplate"
 _ATemplate.Parent = inboundlist
@@ -147,6 +145,7 @@ _ATemplate.BorderSizePixel = 0
 _ATemplate.Position = UDim2.new(0.077196233, 0, -0.00848764274, 0)
 _ATemplate.Size = UDim2.new(1, 0, 0.300000012, 0)
 _ATemplate.Visible = false
+_ATemplate.ZIndex = 6
 _ATemplate.AutoButtonColor = false
 _ATemplate.Font = Enum.Font.Montserrat
 _ATemplate.Text = ""
@@ -216,7 +215,6 @@ args.Selectable = false
 args.Size = UDim2.new(1, 0, 0.824999988, 0)
 args.CanvasSize = UDim2.new(0, 0, 0, 0)
 args.ScrollBarThickness = 8
-args.AutomaticCanvasSize = Enum.AutomaticSize.XY
 
 UICorner_5.CornerRadius = UDim.new(0.0500000007, 0)
 UICorner_5.Parent = args
@@ -233,7 +231,6 @@ arg.Text = "[1]: game.Workspace.CurrentRooms.100._DamHandler.Flood1.RandomLightA
 arg.TextColor3 = Color3.fromRGB(255, 255, 255)
 arg.TextSize = 36.000
 arg.TextXAlignment = Enum.TextXAlignment.Left
-arg.RichText = true
 
 UIListLayout_2.Parent = args
 UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
@@ -287,7 +284,7 @@ close.BorderSizePixel = 0
 close.Position = UDim2.new(0.952061117, 0, 0.00852777716, 0)
 close.Selectable = false
 close.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
-close.ZIndex = 3
+close.ZIndex = 5
 close.AutoButtonColor = false
 close.Font = Enum.Font.GothamBold
 close.Text = "X"
@@ -311,7 +308,7 @@ pause.BorderSizePixel = 0
 pause.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 pause.Selectable = false
 pause.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
-pause.ZIndex = 3
+pause.ZIndex = 5
 pause.AutoButtonColor = false
 pause.Font = Enum.Font.GothamBold
 pause.Text = "II"
@@ -335,7 +332,7 @@ remotes.BorderSizePixel = 0
 remotes.Position = UDim2.new(0.779999971, 0, 0.00899999961, 0)
 remotes.Selectable = false
 remotes.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
-remotes.ZIndex = 3
+remotes.ZIndex = 5
 remotes.AutoButtonColor = false
 remotes.Font = Enum.Font.GothamBold
 remotes.Text = "R"
@@ -359,7 +356,7 @@ save.BorderSizePixel = 0
 save.Position = UDim2.new(0.0500000007, 0, 0.00899999961, 0)
 save.Selectable = false
 save.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
-save.ZIndex = 3
+save.ZIndex = 5
 save.AutoButtonColor = false
 save.Font = Enum.Font.GothamBold
 save.Text = "S"
@@ -383,7 +380,7 @@ clear.BorderSizePixel = 0
 clear.Position = UDim2.new(0.140000001, 0, 0.00899999961, 0)
 clear.Selectable = false
 clear.Size = UDim2.new(0.075000003, 0, 0.075000003, 0)
-clear.ZIndex = 3
+clear.ZIndex = 5
 clear.AutoButtonColor = false
 clear.Font = Enum.Font.GothamBold
 clear.Text = "C"
@@ -421,7 +418,7 @@ remotes_2.AnchorPoint = Vector2.new(0.5, 0)
 remotes_2.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 remotes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 remotes_2.BorderSizePixel = 0
-remotes_2.Position = UDim2.new(0.574999988, 0, 0.0149999997, 0)
+remotes_2.Position = UDim2.new(0.574999988, 0, 0.0130000003, 0)
 remotes_2.Selectable = false
 remotes_2.Size = UDim2.new(0.0599999987, 0, 0.0599999987, 0)
 remotes_2.ZIndex = 3
@@ -440,7 +437,7 @@ UICorner_12.Parent = remotes_2
 
 -- Scripts:
 
-local function CAMBRI_fake_script() -- _rs.LocalScript 
+local function MLUU_fake_script() -- _rs.LocalScript 
 	local script = Instance.new('LocalScript', _rs)
 
 	print("initializing inbound remote viewer")
@@ -569,6 +566,12 @@ local function CAMBRI_fake_script() -- _rs.LocalScript
 		table.clear(_totalArgs)
 	end)
 	
+	main.inboundlist.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	main.togglelist.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	main.inboundlist._ATemplate.args.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	main.inboundlist._ATemplate.args.arg.AutomaticSize = Enum.AutomaticSize.XY
+	main.inboundlist._ATemplate.args.arg.RichText = true
+	
 	for i, remote: RemoteEvent in _REMOTESLIST do
 		task.spawn(function()
 			remote.OnClientEvent:Connect(function()
@@ -690,6 +693,8 @@ local function CAMBRI_fake_script() -- _rs.LocalScript
 		end)
 	end
 	
+	--main.togglelist.CanvasSize = main.togglelist.UIListLayout.AbsoluteContentSize + Vector2.new(0, 40)
+	
 	main.save.MouseButton1Up:Connect(function()
 		pcall(function()
 			if not isfile("_remotelogs") then
@@ -699,8 +704,8 @@ local function CAMBRI_fake_script() -- _rs.LocalScript
 			local fileName = (game.ReplicatedStorage.GameData.Floor.Value) .. "_" .. tostring(os.date("%H-%M-%S"))
 			local filePath = "_remotelogs/" .. fileName
 	
-			writefile(filePath .. ".txt", _conv(_totalArgs))
+			writefile(filePath, _conv(_totalArgs))
 		end)
 	end)
 end
-coroutine.wrap(CAMBRI_fake_script)()
+coroutine.wrap(MLUU_fake_script)()
