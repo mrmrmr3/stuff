@@ -169,6 +169,11 @@ local function DescendantAdded(Object: BasePart | Instance)
 				DeepClone(Object, EntityData, i / 10)
 			end)
 		end
+	elseif Object:IsA("PartOperation") or Object:IsA("MeshPart") then
+		task.spawn(function()
+			Object:AddTag("_setcolfid")
+			Object:AddTag("_setcolfid" .. tostring(Object.CollisionFidelity.Name))
+		end)
 	end
 end
 
