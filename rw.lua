@@ -359,7 +359,7 @@ pause.BorderSizePixel = 0
 pause.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 pause.Selectable = false
 pause.Size = UDim2.new(0.5, 0, 0.5, 0)
-pause.ZIndex = 5
+pause.ZIndex = 8
 pause.AutoButtonColor = false
 pause.Font = Enum.Font.GothamBold
 pause.Text = "II"
@@ -384,7 +384,7 @@ close.LayoutOrder = 1
 close.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 close.Selectable = false
 close.Size = UDim2.new(0.5, 0, 0.5, 0)
-close.ZIndex = 5
+close.ZIndex = 8
 close.AutoButtonColor = false
 close.Font = Enum.Font.GothamBold
 close.Text = "X"
@@ -409,7 +409,7 @@ remotes.LayoutOrder = -1
 remotes.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 remotes.Selectable = false
 remotes.Size = UDim2.new(0.5, 0, 0.5, 0)
-remotes.ZIndex = 5
+remotes.ZIndex = 8
 remotes.AutoButtonColor = false
 remotes.Font = Enum.Font.GothamBold
 remotes.Text = "O"
@@ -434,7 +434,7 @@ save.LayoutOrder = -4
 save.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 save.Selectable = false
 save.Size = UDim2.new(0.5, 0, 0.5, 0)
-save.ZIndex = 5
+save.ZIndex = 8
 save.AutoButtonColor = false
 save.Font = Enum.Font.GothamBold
 save.Text = "💾"
@@ -475,7 +475,7 @@ clear.LayoutOrder = -3
 clear.Position = UDim2.new(0.86500001, 0, 0.00899999961, 0)
 clear.Selectable = false
 clear.Size = UDim2.new(0.5, 0, 0.5, 0)
-clear.ZIndex = 5
+clear.ZIndex = 8
 clear.AutoButtonColor = false
 clear.Font = Enum.Font.GothamBold
 clear.Text = "🔥"
@@ -776,7 +776,7 @@ UICorner_20.Parent = remotes_2
 
 -- Scripts:
 
-local function GTYZ_fake_script() -- _rs.LocalScript 
+local function BGVG_fake_script() -- _rs.LocalScript 
 	local script = Instance.new('LocalScript', _rs)
 
 	print("initializing inbound remote viewer")
@@ -1107,4 +1107,4 @@ local function GTYZ_fake_script() -- _rs.LocalScript
 	
 	main.togglelist.CanvasSize = UDim2.new(0, o.X, 0, o.Y)
 end
-coroutine.wrap(GTYZ_fake_script)()
+coroutine.wrap(BGVG_fake_script)()
