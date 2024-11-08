@@ -43,6 +43,7 @@ local function decoroom(lr)
 		o.noscripts = true
 		o.mode = "invalid"
 		o.ReadMe = false
+		o.DecompileIgnore = {"AntiBridge"}
 
 		o.FilePath = fp
 		o.Object = lr
