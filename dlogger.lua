@@ -40,6 +40,12 @@ local Stuff: Folder = Instance.new("Folder")
 Stuff.Name = "Stuff"
 Stuff.Parent = Leader
 
+local Timestamps: Folder = Instance.new("Folder")
+Timestamps.Name = "Timestamps"
+Timestamps.Parent = Leader
+
+Timestamps:SetAttribute("Time", os.clock())
+
 -- Main
 
 local LocalPlayer = game.Players.LocalPlayer
@@ -229,3 +235,10 @@ local function AmbientAdded(Attachment: Attachment)
 end
 
 workspace.Terrain.ChildAdded:Connect(AmbientAdded)
+
+game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Connect(function()
+	local newTs = Instance.new("NumberValue")
+	newTs.Name = tostring(game.ReplicatedStorage.GameData.LatestRoom.Value)
+	newTs.Parent = Timestamps
+	newTs.Value = os.clock()
+end)
