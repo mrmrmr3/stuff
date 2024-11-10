@@ -897,7 +897,8 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 	local _blacklist = {
 		"RandomLightAttachment",
 		"DrawerContainer",
-		"Minecart"
+		"Minecart",
+		"160.00799"
 	}
 	
 	buttons.clear.MouseButton1Up:Connect(function()
