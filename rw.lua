@@ -898,7 +898,7 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 		"RandomLightAttachment",
 		"DrawerContainer",
 		"Minecart",
-		"160.00799"
+		"Light_Fixtures"
 	}
 	
 	buttons.clear.MouseButton1Up:Connect(function()
