@@ -1,10 +1,14 @@
 local function dec(o)
+        print("decompiling", o.FilePath)
+	
 	local prms = {
 		RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
 		SSI = "saveinstance",
 	}
 	local synsaveinstance = loadstring(game:HttpGet(prms.RepoURL .. prms.SSI .. ".luau", true), prms.SSI)()
 	synsaveinstance(o)
+
+	print("decompiled", o.FilePath)
 end
 
 local function ts()
@@ -45,7 +49,7 @@ local function decoroom(lr)
 		o.noscripts = true
 		o.mode = "invalid"
 		o.ReadMe = false
-		--o.DecompileIgnore = {"AntiBridge"}
+		o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 
 		o.FilePath = fp
 		o.Object = lr
