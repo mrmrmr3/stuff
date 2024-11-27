@@ -28,7 +28,7 @@ if not isfile("_rooms") then
 end
 
 local flts = ts()
-local fpmain = "_rooms/" .. (fl .. fs .. " - [" .. flts .. "] - [" .. gs .. "]")
+local fpmain = "_rooms/" .. (fl .. fs .. " - " .. flts .. " - " .. gs .. "")
 
 makefolder(fpmain)
 
@@ -38,7 +38,7 @@ local function decoroom(lr)
 			task.wait(0.5)
 		end
 
-		local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
+		local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - " .. ts() .. ""
 		local fp = fpmain .. "/" .. fn
 
 		print("RLG, NAME:", fn, "| OR |", fp)
@@ -66,7 +66,7 @@ local function decoroom(lr)
 					makefolder("_siderooms/" .. fl)
 				end
 
-				for _, sr in lr:GetChildren() do
+				--[[for _, sr in lr:GetChildren() do
 					if sr.Name == "Sideroom" then
 						local siz = tostring(sr:GetAttribute("Weight"))
 						local bv = sr:GetExtentsSize()
@@ -81,7 +81,7 @@ local function decoroom(lr)
 							siz = "Wide"
 						end
 
-						local fn2 = "Sideroom" .. siz .. " - [" .. ts() .. "]"
+						local fn2 = "Sideroom" .. siz .. " - " .. ts() .. ""
 						local fp2 = "_siderooms/" .. fl .. "/" .. fn2
 						local o2 = {}
 
@@ -95,7 +95,7 @@ local function decoroom(lr)
 
 						dec(o2)
 					end
-				end
+				end]]
 			end)
 		end
 	end)
