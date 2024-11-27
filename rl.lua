@@ -37,6 +37,8 @@ local function decoroom(lr)
 		local fn = tostring(lr.Name) .. " - " .. lr:GetAttribute("RawName") .. " - [" .. ts() .. "]"
 		local fp = fpmain .. "/" .. fn
 
+		print("RLG, NAME:", fn, "| OR |", fp)
+
 		local o = {}
 
 		o.timeout = 16384
