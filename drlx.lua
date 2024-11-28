@@ -573,7 +573,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 						o2.mode = "invalid"
 						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 						o2.Object = sideroom
-						o._Name = "Sideroom" .. tostring(sideroom:GetAttribute("Weight") or 0)
+						o2._Name = "Sideroom" .. tostring(sideroom:GetAttribute("Weight") or 0)
 						
 						if sideroom then
 							dec(o2, folders.Siderooms)
