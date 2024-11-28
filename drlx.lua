@@ -343,6 +343,7 @@ TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextTransparency = 0.600
 TextLabel.TextWrapped = true
+TextLabel.Visible = false
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 Open.Name = "Open"
