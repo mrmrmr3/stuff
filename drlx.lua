@@ -460,7 +460,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			
 			if isfile(finalName) then
 				local data = readfile(finalName)
-				local newname = ((o._HeaderName and " - " or "") .. decFileName .. " - [" .. TS .. "]")
+				local newname = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
 				
 				dest = (dest and (dest .. "/")) or mainpath
 				
@@ -491,7 +491,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = false
 			o.SaveBytecode = false
 			o.noscripts = true
-			o._HeaderName = "qd"
+			o._HeaderName = "qd_"
 			
 			dec(o, folders.decomps)
 		end,
@@ -560,7 +560,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 			o.Object = LatestRoom
 			o._Name = LatestRoom:GetAttribute("RawName")
-			o._HeaderName = LatestRoom.Name
+			o._HeaderName = LatestRoom.Name .. " - "
 			
 			if LatestRoom then
 				dec(o, folders.Rooms)
@@ -594,7 +594,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 				o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 				o.Object = v
 				o._Name = v:GetAttribute("RawName")
-				o._HeaderName = v.Name
+				o._HeaderName = v.Name .. " - "
 				
 				dec(o, folders.Rooms)
 			end
