@@ -460,11 +460,11 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			
 			if isfile(finalName) then
 				local data = readfile(finalName)
-				local newname = ((o._HeaderName or "") .. " - " .. decFileName .. " - [" .. TS .. "]")
+				local newname = ((o._HeaderName and " - " or "") .. decFileName .. " - [" .. TS .. "]")
 				
 				dest = (dest and (dest .. "/")) or mainpath
 				
-				writefile(dest .. newname, data)
+				writefile(dest .. newname .. fileFormat, data)
 				delfile(finalName)
 			end
 		end)
