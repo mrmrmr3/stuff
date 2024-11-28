@@ -452,17 +452,20 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
 		synsaveinstance(o)
 	
-		warn("Decompiled " .. FileName)
+		print("Decompiled " .. FileName)
 		
 		task.delay(3, function()
-			if isfile(fileID) then
-				local data = readfile(fileID)
+			local fileFormat = ((o.Object and ".rbxmx") or ".rbxlx")
+			local finalName = FileName .. fileFormat
+			
+			if isfile(finalName) then
+				local data = readfile(finalName)
 				local newname = ((o._HeaderName or "") .. " - " .. decFileName .. " - [" .. TS .. "]")
 				
 				dest = (dest and (dest .. "/")) or mainpath
 				
 				writefile(dest .. newname, data)
-				delfile(fileID)
+				delfile(finalName)
 			end
 		end)
 	end
