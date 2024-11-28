@@ -522,7 +522,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 		end
 	end
 	
-	for _, action: TextButton in decomps:WaitForChild("Actions") do
+	for _, action: TextButton in decomps:WaitForChild("Actions"):GetChildren() do
 		if action:IsA("TextButton") then
 			action.MouseButton1Up:Connect(function()
 				if dActions[action.Name] then
