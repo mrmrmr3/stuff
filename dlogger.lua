@@ -51,6 +51,22 @@ Timestamps:SetAttribute("Time", os.clock())
 local LocalPlayer = game.Players.LocalPlayer
 local Char = LocalPlayer.Character
 
+task.spawn(function()
+	game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Connect(function()
+		local newTs = Instance.new("NumberValue")
+		newTs.Name = tostring(game.ReplicatedStorage.GameData.LatestRoom.Value)
+		newTs.Parent = Timestamps
+		newTs.Value = os.clock()
+	end)
+
+	workspace.DescendantAdded:Connect(function(Object: Instance)
+		if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
+			Object:AddTag("d_setcolfid")
+			Object:SetAttribute("_colfid", tostring(Object.CollisionFidelity.Name))
+		end
+	end)
+end)
+
 local attributesIndex = {}
 local function newAttribute(Name: string)
 	if table.find(attributesIndex, Name) then
@@ -235,18 +251,3 @@ local function AmbientAdded(Attachment: Attachment)
 end
 
 workspace.Terrain.ChildAdded:Connect(AmbientAdded)
-
-game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Connect(function()
-	local newTs = Instance.new("NumberValue")
-	newTs.Name = tostring(game.ReplicatedStorage.GameData.LatestRoom.Value)
-	newTs.Parent = Timestamps
-	newTs.Value = os.clock()
-	print("newtsing", os.clock(), newTs, newTs.Parent)
-end)
-
-workspace.DescendantAdded:Connect(function(Object: Instance)
-	if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
-		Object:AddTag("d_setcolfid")
-		Object:SetAttribute("_colfid", tostring(Object.CollisionFidelity.Name))
-	end
-end)
