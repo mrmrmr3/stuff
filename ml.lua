@@ -49,8 +49,8 @@ end)
 
 local r = game.ReplicatedStorage.RemotesFolder
 local dm = {
-	"DIED TO : " .. game.Players.LocalPlayer.Character:GetAttribute("DeathCause"),
-	"REASON : " .. game.Players.LocalPlayer.Character:GetAttribute("DeathReason"),
+	"DIED TO : " .. (game.Players.LocalPlayer.Character:GetAttribute("DeathCause") or ""),
+	"REASON : " .. (game.Players.LocalPlayer.Character:GetAttribute("DeathReason") or ""),
 	"ROOMNUM : " .. game.ReplicatedStorage.GameData.LatestRoom.Value,
 	"-----------"
 }
