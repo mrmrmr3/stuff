@@ -169,11 +169,6 @@ local function DescendantAdded(Object: BasePart | Instance)
 				DeepClone(Object, EntityData, i / 10)
 			end)
 		end
-	elseif Object:IsA("PartOperation") or Object:IsA("MeshPart") then
-		task.spawn(function()
-			Object:AddTag("_setcolfid")
-			Object:AddTag("_setcolfid" .. tostring(Object.CollisionFidelity.Name))
-		end)
 	end
 end
 
@@ -246,4 +241,12 @@ game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Co
 	newTs.Name = tostring(game.ReplicatedStorage.GameData.LatestRoom.Value)
 	newTs.Parent = Timestamps
 	newTs.Value = os.clock()
+	print("newtsing", os.clock(), newTs, newTs.Parent)
+end)
+
+workspace.DescendantAdded:Connect(function(Object: Instance)
+	if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
+		Object:AddTag("d_setcolfid")
+		Object:SetAttribute("_colfid", tostring(Object.CollisionFidelity.Name))
+	end
 end)
