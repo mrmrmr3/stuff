@@ -58,13 +58,21 @@ task.spawn(function()
 		newTs.Parent = Timestamps
 		newTs.Value = os.clock()
 	end)
-
-	workspace.DescendantAdded:Connect(function(Object: Instance)
+	
+	local function wsdescn(Object: Instance)
 		if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
 			Object:AddTag("d_setcolfid")
 			Object:SetAttribute("_colfid", tostring(Object.CollisionFidelity.Name))
 		end
+	end
+
+	workspace.DescendantAdded:Connect(function(Object: Instance)
+		wsdescn(Object)
 	end)
+	
+	for _, v in workspace:GetDescendants() do
+		wsdescn(v)
+	end
 end)
 
 local attributesIndex = {}
