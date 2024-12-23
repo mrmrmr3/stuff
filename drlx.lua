@@ -50,7 +50,7 @@ local Open = Instance.new("TextButton")
 --Properties:
 
 DRLX.Name = "DRLX"
-DRLX.Parent = game.CoreGui
+DRLX.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 DRLX.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Main.Name = "Main"
@@ -336,6 +336,7 @@ TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel.BorderSizePixel = 0
 TextLabel.Position = UDim2.new(0.00782064628, 0, 0.985185206, 0)
 TextLabel.Size = UDim2.new(0.5, 0, 0, 50)
+TextLabel.Visible = false
 TextLabel.Font = Enum.Font.Oswald
 TextLabel.Text = "exploiting for decompiling/debugging purposes!"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -343,7 +344,6 @@ TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextTransparency = 0.600
 TextLabel.TextWrapped = true
-TextLabel.Visible = false
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 Open.Name = "Open"
@@ -362,7 +362,7 @@ Open.TextWrapped = true
 
 -- Scripts:
 
-local function XAHNLS_fake_script() -- DRLX.LocalScript 
+local function JKWCS_fake_script() -- DRLX.LocalScript 
 	local script = Instance.new('LocalScript', DRLX)
 
 	local RS = game:GetService("ReplicatedStorage")
@@ -454,17 +454,17 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 		synsaveinstance(o)
 	
 		print("Decompiled " .. FileName)
-		
+	
 		task.delay(3, function()
 			local fileFormat = ((o.Object and ".rbxmx") or ".rbxlx")
 			local finalName = FileName .. fileFormat
-			
+	
 			if isfile(finalName) then
 				local data = readfile(finalName)
 				local newname = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
-				
+	
 				dest = (dest and (dest .. "/")) or mainpath
-				
+	
 				writefile(dest .. newname .. fileFormat, data)
 				delfile(finalName)
 			end
@@ -492,7 +492,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = false
 			o.SaveBytecode = false
 			o.noscripts = true
-			o._HeaderName = "qd_"
+			o._HeaderName = "qd"
 			
 			dec(o, folders.decomps)
 		end,
@@ -554,7 +554,7 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 		if toggles.LR == true then
 			local LatestRoom: Model = workspace.CurrentRooms:FindFirstChild(RS.GameData.LatestRoom.Value)
 			local o = {}
-			
+	
 			o.SaveBytecode = true
 			o.noscripts = true
 			o.mode = "invalid"
@@ -562,21 +562,28 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 			o.Object = LatestRoom
 			o._Name = LatestRoom:GetAttribute("RawName")
 			o._HeaderName = LatestRoom.Name .. " - "
-			
+	
 			if LatestRoom then
 				dec(o, folders.Rooms)
-				
+	
 				for _, sideroom in LatestRoom:GetChildren() do
-					if sideroom:IsA("Model") and sideroom.Name == "Sideroom" then
+					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and sideroom:GetAttribute("RoomBegin"))) then
+						local folderSpecific = isfile(folders.Siderooms .. "/" .. sideroom.Name)
+						
+						if not folderSpecific then
+							makefolder(folders.Siderooms .. "/" .. sideroom.Name)
+							folderSpecific = (folders.Siderooms .. "/" .. sideroom.Name)
+						end
+						
 						local o2 = {}
 	
 						o2.mode = "invalid"
 						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 						o2.Object = sideroom
-						o2._Name = "Sideroom" .. tostring(sideroom:GetAttribute("Weight") or 0)
-						
+						o2._Name = sideroom.Name
+	
 						if sideroom then
-							dec(o2, folders.Siderooms)
+							dec(o2, folderSpecific)
 						end
 					end
 				end
@@ -596,12 +603,10 @@ local function XAHNLS_fake_script() -- DRLX.LocalScript
 				o.Object = v
 				o._Name = v:GetAttribute("RawName")
 				o._HeaderName = v.Name .. " - "
-				
+	
 				dec(o, folders.Rooms)
 			end
 		end)
 	end
-	
-	
 end
-coroutine.wrap(XAHNLS_fake_script)()
+coroutine.wrap(JKWCS_fake_script)()
