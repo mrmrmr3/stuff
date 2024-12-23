@@ -50,7 +50,7 @@ local Open = Instance.new("TextButton")
 --Properties:
 
 DRLX.Name = "DRLX"
-DRLX.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+DRLX.Parent = game.CoreGui --Players.LocalPlayer:WaitForChild("PlayerGui")
 DRLX.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Main.Name = "Main"
