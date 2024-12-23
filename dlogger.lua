@@ -176,7 +176,7 @@ local RepCache = {}
 
 local function CheckForRpntc(Object: Instance)
 	if Object:IsA("Model") then
-		if Object.Name == "Repentance" then
+		if string.find(Object.Name, "Repentance") then
 			local Time = os.clock()
 			local Index = 0
 			local NewRep = Instance.new("Folder")
@@ -194,6 +194,8 @@ local function CheckForRpntc(Object: Instance)
 						firstEntity = workspace:FindFirstChild("SeekMoving", true) and "Seek"
 					elseif game.CollectionService:GetTagged("FigureRig")[1] then
 						firstEntity = game.CollectionService:GetTagged("FigureRig")[1] and "Figure"
+					elseif game.ReplicatedStorage.GameData.Floor.Value == "Mines" and game.ReplicatedStorage.GameData.LatestRoom.Value == 100 then
+						firstEntity = "SeekDam"
 					end
 
 					if not firstEntity then
