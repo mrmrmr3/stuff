@@ -397,9 +397,10 @@ local function JKWCS_fake_script() -- DRLX.LocalScript
 	end
 	
 	local gd = RS:WaitForChild("GameData")
+	local GameSeed = tostring(gd:WaitForChild("GameSeed").Value)
 	local Floor = gd:WaitForChild("Floor").Value
 	local FloorSpecific = gd:WaitForChild("FloorSpecific").Value
-	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "]"
+	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "] (" .. GameSeed .. ")"
 	local mainpath = MainFolder .. "/"
 	
 	makefolder(MainFolder)
