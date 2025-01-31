@@ -432,7 +432,7 @@ Open.TextWrapped = true
 
 -- Scripts:
 
-local function LGTFWUB_fake_script() -- DRLX.LocalScript 
+local function MJUO_fake_script() -- DRLX.LocalScript 
 	local script = Instance.new('LocalScript', DRLX)
 
 	local RS = game:GetService("ReplicatedStorage")
@@ -602,7 +602,7 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 	}
 	
 	local function Immortalize(Obj: Instance)
-		if toggles.OI == false or workspace.CurrentRooms:FindFirstChild(Obj.Parent.Name) or Obj.Parent == workspace.CurrentRooms then
+		if toggles.OI == false or OGToClone[Obj] ~= nil or Obj.Parent.Parent == workspace.CurrentRooms or Obj.Parent == workspace.CurrentRooms then
 			return
 		end
 	
@@ -612,7 +612,10 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 	
 			OGToClone[Obj] = TheClone
 	
-			local Destroying = Obj:GetPropertyChangedSignal("Parent"):Connect(function()
+			local Parented = false 
+			local Destroying: RBXScriptConnection
+	
+			Destroying = Obj:GetPropertyChangedSignal("Parent"):Connect(function()
 				if not Obj.Parent then
 					if TheClone then
 						if not OGParent.Parent then
@@ -620,15 +623,22 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 						end
 	
 						if OGParent and OGParent.Parent then
+							Parented = true
 							TheClone.Parent = OGParent
 						end
+						
+						Destroying:Disconnect()
 					end
 				end
 			end)
 	
 			task.delay(60, function()
-				game.Debris:AddItem(TheClone, 0.1)
-				Destroying:Disconnect()
+				if not Parented then
+					pcall(function()
+						game.Debris:AddItem(TheClone, 0.1)
+						Destroying:Disconnect()
+					end)
+				end
 			end)
 		end)
 	end
@@ -820,4 +830,4 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 		end)
 	end
 end
-coroutine.wrap(LGTFWUB_fake_script)()
+coroutine.wrap(MJUO_fake_script)()
