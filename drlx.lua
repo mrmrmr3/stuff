@@ -503,7 +503,7 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 		local TS = ts()
 		
 		--local fileID = decFileName-- .. tostring(decId)
-		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
+		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. tostring(gd.GameSeed.Value) .. ")")
 		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 	
 		print("Decompiling " .. FileName)
