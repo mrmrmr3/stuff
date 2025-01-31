@@ -712,7 +712,9 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 	}
 	
 	local function toggleDec(name: string, val: boolean)
-		val = (val ~= nil and val) or not toggles[name]
+		if val == nil then
+			val = not toggles[name]
+		end
 		
 		toggles[name] = val
 		
@@ -720,7 +722,7 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 		
 		toggleUI.Indicator.BackgroundColor3 = val and Color3.fromRGB(85, 255, 0) or Color3.fromRGB(255, 0, 0)
 		
-		if tActions[name] then
+		if val == true and tActions[name] then
 			tActions[name](val)
 		end
 	end
