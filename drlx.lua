@@ -605,6 +605,10 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 		if toggles.OI == false or OGToClone[Obj] ~= nil or Obj.Parent.Parent == workspace.CurrentRooms or Obj.Parent == workspace.CurrentRooms then
 			return
 		end
+
+		if Obj.Parent:IsA("Camera") or game.Players:GetPlayerFromCharacter(Obj) then
+			return
+		end
 	
 		task.delay(0.1, function()
 			local TheClone = Obj:Clone()
