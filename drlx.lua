@@ -590,7 +590,7 @@ local function LGTFWUB_fake_script() -- DRLX.LocalScript
 	
 		task.wait(2)
 	
-		dec()
+		skipRoom()
 	
 		if slowdownRooms[currentr:GetAttribute("RawName")] then
 			task.wait(10)
