@@ -1,8 +1,3 @@
--- Gui to Lua
--- Version: 3.2
-
--- Instances:
-
 local DRLX = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local Nav = Instance.new("Frame")
@@ -31,7 +26,7 @@ local UICorner_5 = Instance.new("UICorner")
 local QD = Instance.new("TextButton")
 local UIAspectRatioConstraint_6 = Instance.new("UIAspectRatioConstraint")
 local UICorner_6 = Instance.new("UICorner")
-local Drops = Instance.new("TextButton")
+local Bytecode = Instance.new("TextButton")
 local UIAspectRatioConstraint_7 = Instance.new("UIAspectRatioConstraint")
 local UICorner_7 = Instance.new("UICorner")
 local Toggles = Instance.new("Frame")
@@ -41,16 +36,24 @@ local UIAspectRatioConstraint_8 = Instance.new("UIAspectRatioConstraint")
 local UICorner_8 = Instance.new("UICorner")
 local UIPadding_2 = Instance.new("UIPadding")
 local UIListLayout_4 = Instance.new("UIListLayout")
-local FileName = Instance.new("TextBox")
+local AS = Instance.new("TextButton")
+local Indicator_2 = Instance.new("Frame")
+local UIAspectRatioConstraint_9 = Instance.new("UIAspectRatioConstraint")
 local UICorner_9 = Instance.new("UICorner")
 local UIPadding_3 = Instance.new("UIPadding")
+local OI = Instance.new("TextButton")
+local Indicator_3 = Instance.new("Frame")
+local UIAspectRatioConstraint_10 = Instance.new("UIAspectRatioConstraint")
+local UICorner_10 = Instance.new("UICorner")
+local UIPadding_4 = Instance.new("UIPadding")
+local FileName = Instance.new("TextBox")
+local UICorner_11 = Instance.new("UICorner")
+local UIPadding_5 = Instance.new("UIPadding")
 local TextLabel = Instance.new("TextLabel")
 local Open = Instance.new("TextButton")
 
---Properties:
-
 DRLX.Name = "DRLX"
-DRLX.Parent = game.CoreGui --Players.LocalPlayer:WaitForChild("PlayerGui")
+DRLX.Parent = game.CoreGui
 DRLX.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Main.Name = "Main"
@@ -238,26 +241,25 @@ UIAspectRatioConstraint_6.Parent = QD
 UICorner_6.CornerRadius = UDim.new(0.100000001, 0)
 UICorner_6.Parent = QD
 
-Drops.Name = "Drops"
-Drops.Parent = Actions
-Drops.BackgroundColor3 = Color3.fromRGB(255, 162, 32)
-Drops.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Drops.BorderSizePixel = 0
-Drops.LayoutOrder = 3
-Drops.Size = UDim2.new(1, 0, 1, 0)
-Drops.Visible = false
-Drops.ZIndex = 5
-Drops.Font = Enum.Font.Oswald
-Drops.Text = "DROPS"
-Drops.TextColor3 = Color3.fromRGB(255, 255, 255)
-Drops.TextScaled = true
-Drops.TextSize = 14.000
-Drops.TextWrapped = true
+Bytecode.Name = "Bytecode"
+Bytecode.Parent = Actions
+Bytecode.BackgroundColor3 = Color3.fromRGB(255, 162, 32)
+Bytecode.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Bytecode.BorderSizePixel = 0
+Bytecode.LayoutOrder = 3
+Bytecode.Size = UDim2.new(1, 0, 1, 0)
+Bytecode.ZIndex = 5
+Bytecode.Font = Enum.Font.Oswald
+Bytecode.Text = "BYTECODE"
+Bytecode.TextColor3 = Color3.fromRGB(255, 255, 255)
+Bytecode.TextScaled = true
+Bytecode.TextSize = 14.000
+Bytecode.TextWrapped = true
 
-UIAspectRatioConstraint_7.Parent = Drops
+UIAspectRatioConstraint_7.Parent = Bytecode
 
 UICorner_7.CornerRadius = UDim.new(0.100000001, 0)
-UICorner_7.Parent = Drops
+UICorner_7.Parent = Bytecode
 
 Toggles.Name = "Toggles"
 Toggles.Parent = Decomps_2
@@ -305,6 +307,74 @@ UIListLayout_4.Parent = Toggles
 UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout_4.Padding = UDim.new(0.0399999991, 0)
 
+AS.Name = "AS"
+AS.Parent = Toggles
+AS.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+AS.BackgroundTransparency = 1.000
+AS.BorderColor3 = Color3.fromRGB(0, 0, 0)
+AS.BorderSizePixel = 0
+AS.LayoutOrder = 2
+AS.Size = UDim2.new(1, 0, 0.150000006, 0)
+AS.ZIndex = 5
+AS.Font = Enum.Font.Oswald
+AS.Text = "Auto-Skip Rooms [ Admin Panel Required ]"
+AS.TextColor3 = Color3.fromRGB(255, 255, 255)
+AS.TextScaled = true
+AS.TextSize = 14.000
+AS.TextWrapped = true
+AS.TextXAlignment = Enum.TextXAlignment.Left
+
+Indicator_2.Name = "Indicator"
+Indicator_2.Parent = AS
+Indicator_2.BackgroundColor3 = Color3.fromRGB(85, 255, 0)
+Indicator_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Indicator_2.BorderSizePixel = 0
+Indicator_2.Position = UDim2.new(-0.0549999997, 0, 0, 0)
+Indicator_2.Size = UDim2.new(1, 0, 1, 0)
+Indicator_2.ZIndex = 4
+
+UIAspectRatioConstraint_9.Parent = Indicator_2
+
+UICorner_9.CornerRadius = UDim.new(1, 0)
+UICorner_9.Parent = Indicator_2
+
+UIPadding_3.Parent = AS
+UIPadding_3.PaddingLeft = UDim.new(0.0549999997, 0)
+
+OI.Name = "OI"
+OI.Parent = Toggles
+OI.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+OI.BackgroundTransparency = 1.000
+OI.BorderColor3 = Color3.fromRGB(0, 0, 0)
+OI.BorderSizePixel = 0
+OI.LayoutOrder = 3
+OI.Size = UDim2.new(1, 0, 0.150000006, 0)
+OI.ZIndex = 5
+OI.Font = Enum.Font.Oswald
+OI.Text = "Object Immortalizer"
+OI.TextColor3 = Color3.fromRGB(255, 255, 255)
+OI.TextScaled = true
+OI.TextSize = 14.000
+OI.TextWrapped = true
+OI.TextXAlignment = Enum.TextXAlignment.Left
+
+Indicator_3.Name = "Indicator"
+Indicator_3.Parent = OI
+Indicator_3.BackgroundColor3 = Color3.fromRGB(85, 255, 0)
+Indicator_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Indicator_3.BorderSizePixel = 0
+Indicator_3.Position = UDim2.new(-0.0549999997, 0, 0, 0)
+Indicator_3.Size = UDim2.new(1, 0, 1, 0)
+Indicator_3.ZIndex = 4
+
+UIAspectRatioConstraint_10.Parent = Indicator_3
+
+UICorner_10.CornerRadius = UDim.new(1, 0)
+UICorner_10.Parent = Indicator_3
+
+UIPadding_4.Parent = OI
+UIPadding_4.PaddingLeft = UDim.new(0.0549999997, 0)
+
 FileName.Name = "FileName"
 FileName.Parent = Decomps_2
 FileName.BackgroundColor3 = Color3.fromRGB(17, 21, 34)
@@ -322,11 +392,11 @@ FileName.TextSize = 14.000
 FileName.TextWrapped = true
 FileName.TextXAlignment = Enum.TextXAlignment.Left
 
-UICorner_9.CornerRadius = UDim.new(0.300000012, 0)
-UICorner_9.Parent = FileName
+UICorner_11.CornerRadius = UDim.new(0.300000012, 0)
+UICorner_11.Parent = FileName
 
-UIPadding_3.Parent = FileName
-UIPadding_3.PaddingLeft = UDim.new(0.0149999997, 0)
+UIPadding_5.Parent = FileName
+UIPadding_5.PaddingLeft = UDim.new(0.0149999997, 0)
 
 TextLabel.Parent = DRLX
 TextLabel.AnchorPoint = Vector2.new(0, 1)
@@ -362,7 +432,7 @@ Open.TextWrapped = true
 
 -- Scripts:
 
-local function JKWCS_fake_script() -- DRLX.LocalScript 
+local function LGTFWUB_fake_script() -- DRLX.LocalScript 
 	local script = Instance.new('LocalScript', DRLX)
 
 	local RS = game:GetService("ReplicatedStorage")
@@ -397,10 +467,9 @@ local function JKWCS_fake_script() -- DRLX.LocalScript
 	end
 	
 	local gd = RS:WaitForChild("GameData")
-	local GameSeed = tostring(gd:WaitForChild("GameSeed").Value)
 	local Floor = gd:WaitForChild("Floor").Value
 	local FloorSpecific = gd:WaitForChild("FloorSpecific").Value
-	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "] (" .. GameSeed .. ")"
+	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "]"
 	local mainpath = MainFolder .. "/"
 	
 	makefolder(MainFolder)
@@ -428,63 +497,190 @@ local function JKWCS_fake_script() -- DRLX.LocalScript
 		}
 	]]}
 	
-local function dec(o, dest)
-	--local decId = math.random(1, 999999)
-	local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
-	local TS = ts()
+	local function dec(o, dest)
+		--local decId = math.random(1, 999999)
+		local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
+		local TS = ts()
+		
+		--local fileID = decFileName-- .. tostring(decId)
+		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
+		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 	
-	--local fileID = decFileName-- .. tostring(decId)
-	local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
-	local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
-
-	print("Decompiling " .. FileName)
-
-	o.timeout = 16384
-	o.FilePath = FilePath
-	o.ReadMe = false
-
-	local waitTime = o._WaitTime or 0
-
-	task.wait(waitTime)
-
-	local Params = {
-		RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-		SSI = "saveinstance",
+		print("Decompiling " .. FileName)
+	
+		o.timeout = 16384
+		o.FilePath = FilePath
+		o.ReadMe = false
+	
+		local waitTime = o._WaitTime or 0
+	
+		task.wait(waitTime)
+	
+		local Params = {
+			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+			SSI = "saveinstance",
+		}
+		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+		synsaveinstance(o)
+	
+		print("Decompiled " .. FileName)
+	
+		--[[task.delay(3, function()
+			local fileFormat = ((o.Object and ".rbxmx") or ".rbxlx")
+			local finalName = FileName .. fileFormat
+	
+			if isfile(finalName) then
+				local data = readfile(finalName)
+				local newname = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
+	
+				dest = (dest and (dest .. "/")) or mainpath
+	
+				writefile(dest .. newname .. fileFormat, data)
+				delfile(finalName)
+			end
+		end)]]
+	end
+	
+	local slowdownRooms = {
+		["Hotel_SeekIntro"] = true,
+		["Sewer_SeekEnter"] = true
 	}
-	local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-	synsaveinstance(o)
-
-	print("Decompiled " .. FileName)
-
-	--[[task.delay(3, function()
-		local fileFormat = ((o.Object and ".rbxmx") or ".rbxlx")
-		local finalName = FileName .. fileFormat
-
-		if isfile(finalName) then
-			local data = readfile(finalName)
-			local newname = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
-
-			dest = (dest and (dest .. "/")) or mainpath
-
-			writefile(dest .. newname .. fileFormat, data)
-			delfile(finalName)
+	
+	local toggles = {
+		LR = true,
+		AS = false,
+		OI = false,
+	}
+	
+	local slowdownOn = {
+		[43] = Floor == "Mines",
+		[49] = Floor == "Mines",
+		[50] = Floor == "Hotel",
+		[99] = Floor == "Mines"
+	}
+	
+	local function skipRoom()
+		if not toggles.AS then
+			return
 		end
-	end)]]
-end
+		
+		local lr = game.ReplicatedStorage.GameData.LatestRoom.Value
+		local previousr = workspace.CurrentRooms:FindFirstChild(tostring(lr - 1))
+		local nextr = workspace.CurrentRooms:FindFirstChild(tostring(lr + 1))
+		local currentr = workspace.CurrentRooms:FindFirstChild(tostring(lr))
+	
+		task.spawn(function()
+			pcall(function()
+				require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).chaseMove = false
+			end)
+		end)
+	
+		if slowdownOn[lr] then
+			task.wait(9)
+		end
+	
+		task.spawn(function()
+			pcall(function()
+				require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).chaseMove = false
+			end)
+		end)
+	
+		game.ReplicatedStorage.RemotesFolder.AdminPanelRunCommand:FireServer("SkipRoom", {})
+		game.ReplicatedStorage.RemotesFolder.AdminPanelRunCommand:FireServer("DELETE ALL", {})
+	
+		task.wait(2)
+	
+		dec()
+	
+		if slowdownRooms[currentr:GetAttribute("RawName")] then
+			task.wait(10)
+		end
+	end
+	
+	local OGToClone = {
+		[workspace] = workspace
+	}
+	
+	local function Immortalize(Obj: Instance)
+		if toggles.OI == false or workspace.CurrentRooms:FindFirstChild(Obj.Parent.Name) or Obj.Parent == workspace.CurrentRooms then
+			return
+		end
+	
+		task.delay(0.1, function()
+			local TheClone = Obj:Clone()
+			local OGParent = Obj.Parent
+	
+			OGToClone[Obj] = TheClone
+	
+			local Destroying = Obj:GetPropertyChangedSignal("Parent"):Connect(function()
+				if not Obj.Parent then
+					if TheClone then
+						if not OGParent.Parent then
+							OGParent = OGToClone[OGParent]
+						end
+	
+						if OGParent and OGParent.Parent then
+							TheClone.Parent = OGParent
+						end
+					end
+				end
+			end)
+	
+			task.delay(60, function()
+				game.Debris:AddItem(TheClone, 0.1)
+				Destroying:Disconnect()
+			end)
+		end)
+	end
+	
+	local OI_Connection: RBXScriptConnection
+	
+	local tActions = {
+		AS = function(toggle: boolean)
+			if toggle == true then
+				game:GetService("ReplicatedStorage"):WaitForChild("RemotesFolder"):WaitForChild("AdminPanelRunCommand"):FireServer("Apply Changes", {
+					["Players"] = {},
+					["Max Health"] = 1000,
+					["Health"] = 1000,
+					["Star Shield"] = 0,
+					["Speed Boost"] = 30,
+					["God Mode"] = true
+				})
+	
+				skipRoom()
+			end
+		end,
+		
+		OI = function(toggle: boolean)
+			if toggle == true then
+				for _, v in workspace:GetDescendants() do
+					Immortalize(v)
+				end
+	
+				OI_Connection = workspace.DescendantAdded:Connect(function(desc)
+					Immortalize(desc)
+				end)
+			else
+				pcall(function()
+					OI_Connection:Disconnect()
+				end)
+			end
+		end,
+	}
 	
 	local dActions = {
 		Main = function()
 			local o = {}
-			
+	
 			o.RemovePlayerCharacters = false
 			o.IsolatePlayers = true
 			o.SavePlayers = true
 			o.SaveBytecode = false
 			o.noscripts = true
-			
+	
 			dec(o, folders.decomps)
 		end,
-		
+	
 		QD = function()
 			local o = {}
 	
@@ -494,17 +690,25 @@ end
 			o.SaveBytecode = false
 			o.noscripts = true
 			o._HeaderName = "qd"
-			
+	
 			dec(o, folders.decomps)
 		end,
-		
-		Drops = function()
-			
-		end,
-	}
 	
-	local toggles = {
-		LR = true
+		Bytecode = function()
+			local o = {}
+	
+			o.RemovePlayerCharacters = false
+			o.IsolatePlayers = true
+			o.SavePlayers = true
+			o.SaveBytecode = true
+			o.noscripts = true
+	
+			if not isfile(folders.misc .. "/bytecode") then
+				makefolder(folders.misc .. "/bytecode")
+			end
+	
+			dec(o, folders.misc .. "/bytecode")
+		end,
 	}
 	
 	local function toggleDec(name: string, val: boolean)
@@ -515,6 +719,10 @@ end
 		local toggleUI = decomps:WaitForChild("Toggles"):FindFirstChild(name)
 		
 		toggleUI.Indicator.BackgroundColor3 = val and Color3.fromRGB(85, 255, 0) or Color3.fromRGB(255, 0, 0)
+		
+		if tActions[name] then
+			tActions[name](val)
+		end
 	end
 	
 	for _, toggle in decomps:WaitForChild("Toggles"):GetChildren() do
@@ -610,4 +818,4 @@ end
 		end)
 	end
 end
-coroutine.wrap(JKWCS_fake_script)()
+coroutine.wrap(LGTFWUB_fake_script)()
