@@ -602,7 +602,7 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 	}
 	
 	local function Immortalize(Obj: Instance)
-		if toggles.OI == false or OGToClone[Obj] ~= nil or Obj.Parent.Parent == workspace.CurrentRooms or Obj.Parent == workspace.CurrentRooms then
+		if toggles.OI == false or OGToClone[Obj] ~= nil or Obj.Parent.Parent == workspace.CurrentRooms or ((Obj.Name == "Assets" or Obj.Name == "Parts") and Obj.Parent == workspace.CurrentRooms) then
 			return
 		end
 
