@@ -52,6 +52,8 @@ local UIPadding_5 = Instance.new("UIPadding")
 local TextLabel = Instance.new("TextLabel")
 local Open = Instance.new("TextButton")
 
+--Properties:
+
 DRLX.Name = "DRLX"
 DRLX.Parent = game.CoreGui
 DRLX.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -405,8 +407,7 @@ TextLabel.BackgroundTransparency = 1.000
 TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel.BorderSizePixel = 0
 TextLabel.Position = UDim2.new(0.00782064628, 0, 0.985185206, 0)
-TextLabel.Size = UDim2.new(0.5, 0, 0, 50)
-TextLabel.Visible = false
+TextLabel.Size = UDim2.new(0.5, 0, 0.075000003, 0)
 TextLabel.Font = Enum.Font.Oswald
 TextLabel.Text = "exploiting for decompiling/debugging purposes!"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -414,6 +415,7 @@ TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextTransparency = 0.600
 TextLabel.TextWrapped = true
+TextLabel.Visible = false
 TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 Open.Name = "Open"
@@ -421,8 +423,8 @@ Open.Parent = DRLX
 Open.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
 Open.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Open.BorderSizePixel = 0
-Open.Position = UDim2.new(0, 0, 0.200000003, 0)
-Open.Size = UDim2.new(0, 100, 0, 50)
+Open.Position = UDim2.new(0.605963767, 0, -0.000564963149, 0)
+Open.Size = UDim2.new(0.100000001, 0, 0.075000003, 0)
 Open.Font = Enum.Font.Oswald
 Open.Text = "OPEN"
 Open.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -432,7 +434,7 @@ Open.TextWrapped = true
 
 -- Scripts:
 
-local function MJUO_fake_script() -- DRLX.LocalScript 
+local function JSCW_fake_script() -- DRLX.LocalScript 
 	local script = Instance.new('LocalScript', DRLX)
 
 	local RS = game:GetService("ReplicatedStorage")
@@ -552,6 +554,10 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 		OI = false,
 	}
 	
+	local function getRoomName(room: Model)
+		return room:GetAttribute("RawName") or room:GetAttribute("OriginalName") or room.Name
+	end
+	
 	local slowdownOn = {
 		[43] = Floor == "Mines",
 		[49] = Floor == "Mines",
@@ -592,7 +598,7 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 	
 		skipRoom()
 	
-		if slowdownRooms[currentr:GetAttribute("RawName")] then
+		if slowdownRooms[getRoomName(currentr)] then
 			task.wait(10)
 		end
 	end
@@ -605,8 +611,8 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 		if toggles.OI == false or OGToClone[Obj] ~= nil or Obj.Parent.Parent == workspace.CurrentRooms or ((Obj.Name == "Assets" or Obj.Name == "Parts") and Obj.Parent == workspace.CurrentRooms) then
 			return
 		end
-
-		if Obj.Parent:IsA("Camera") or game.Players:GetPlayerFromCharacter(Obj) then
+		
+		if Obj.Parent:IsA("Camera") or game.Players:GetPlayerFromCharacter(Obj) or Obj.Parent == nil then
 			return
 		end
 	
@@ -616,11 +622,11 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 	
 			OGToClone[Obj] = TheClone
 	
-			local Parented = false 
+			local Parented = false
 			local Destroying: RBXScriptConnection
 	
-			Destroying = Obj:GetPropertyChangedSignal("Parent"):Connect(function()
-				if not Obj.Parent then
+			Destroying = Obj.AncestryChanged:Connect(function(_, newParent)
+				if not Obj.Parent or not newParent then
 					if TheClone then
 						if not OGParent.Parent then
 							OGParent = OGToClone[OGParent]
@@ -726,6 +732,8 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 	}
 	
 	local function toggleDec(name: string, val: boolean)
+		if not m.Visible then return end
+		
 		if val == nil then
 			val = not toggles[name]
 		end
@@ -785,14 +793,14 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 			o.mode = "invalid"
 			o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 			o.Object = LatestRoom
-			o._Name = LatestRoom:GetAttribute("RawName")
+			o._Name = getRoomName(LatestRoom)
 			o._HeaderName = LatestRoom.Name .. " - "
 	
 			if LatestRoom then
 				dec(o, folders.Rooms)
 	
 				for _, sideroom in LatestRoom:GetChildren() do
-					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and sideroom:GetAttribute("RoomBegin"))) then
+					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
 						local folderSpecific = isfile(folders.Siderooms .. "/" .. sideroom.Name)
 						
 						if not folderSpecific then
@@ -826,7 +834,7 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 				o.mode = "invalid"
 				o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 				o.Object = v
-				o._Name = v:GetAttribute("RawName")
+				o._Name = getRoomName(v)
 				o._HeaderName = v.Name .. " - "
 	
 				dec(o, folders.Rooms)
@@ -834,4 +842,4 @@ local function MJUO_fake_script() -- DRLX.LocalScript
 		end)
 	end
 end
-coroutine.wrap(MJUO_fake_script)()
+coroutine.wrap(JSCW_fake_script)()
