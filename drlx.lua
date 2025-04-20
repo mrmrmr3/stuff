@@ -470,6 +470,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	
 	local gd = RS:WaitForChild("GameData")
 	local Floor = gd:WaitForChild("Floor").Value
+	local GameSeed = (Floor ~= "Fools" and tostring(gd.GameSeed.Value)) or ""
 	local FloorSpecific = gd:WaitForChild("FloorSpecific").Value
 	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "]"
 	local mainpath = MainFolder .. "/"
@@ -505,7 +506,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		local TS = ts()
 		
 		--local fileID = decFileName-- .. tostring(decId)
-		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. tostring(gd.GameSeed.Value) .. ")")
+		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
 		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 	
 		print("Decompiling " .. FileName)
