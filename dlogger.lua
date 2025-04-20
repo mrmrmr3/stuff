@@ -48,6 +48,14 @@ Timestamps:SetAttribute("Time", os.clock())
 
 -- Main
 
+local function newRoomData(Room: Model)
+	local rd = Info:FindFirstChild(Room.Name) or Instance.new("Folder")
+	rd.Name = Room.Name
+	rd.Parent = Info
+	
+	return rd
+end
+
 local LocalPlayer = game.Players.LocalPlayer
 local Char = LocalPlayer.Character
 
@@ -92,7 +100,7 @@ local function newAttribute(Name: string)
 	local na = Instance.new("StringValue")
 	na.Name = Name
 	na.Parent = NewAttributes
-	na:SetAttribute("Drops", #workspace.Drops:GetChildren())
+	pcall(function() na:SetAttribute("Drops", #workspace.Drops:GetChildren()) end)
 	na:SetAttribute("Number", game.ReplicatedStorage.GameData.LatestRoom.Value)
 
 	return na
@@ -234,20 +242,25 @@ local function CheckForRpntc(Object: Instance)
 	end
 end
 
+local function getRoomName(room: Model)
+	return room:GetAttribute("RawName") or room:GetAttribute("OriginalName") or room.Name
+end
+
 local function DescendantAdded(Object: BasePart | Instance)
 	local Attributes: {[string]: any} = Object:GetAttributes()
 	local Module: string = Attributes.LoadModule
+	local Room: Model = findRoom(Object)
 
 	if Object:IsA("BasePart") then
 		if Object.CollisionGroup == "BaseCheck" then
 			task.delay(1, function()
-				Object:SetAttribute("ROOM", findRoom(Object):GetAttribute("Raw_Name"))
-				DeepClone(Object, Info, 0)
+				Object:SetAttribute("ROOM", getRoomName(Room))
+				DeepClone(Object, newRoomData(Room), 0)
 			end)
 		end
 	elseif Object:IsA("Folder") then
 		if Object.Name == "PathfindNodes" then
-			DeepClone(Object, Info)
+			DeepClone(Object, newRoomData(Room))
 		end
 	elseif Object:IsA("Model") then
 		CheckForRpntc(Object)
