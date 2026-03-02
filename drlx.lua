@@ -550,6 +550,13 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		[99] = Floor == "Mines"
 	}
 
+	local roomBlacklist = {
+		"Mines_Nest",
+		"Sewer_Dam",
+		"Hotel_Library",
+		"Hotel_EndNew",
+	}
+
 	local function skipRoom()
 		if not toggles.AS then
 			return
@@ -787,6 +794,11 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 
 		if toggles.LR == true then
 			local LatestRoom: Model = workspace.CurrentRooms:FindFirstChild(RS.GameData.LatestRoom.Value)
+			
+			if table.find(roomBlacklist, LatestRoom:GetAttribute("RawName") or "") then
+				return
+			end
+				
 			local o = {}
 
 			o.SaveBytecode = true
@@ -798,10 +810,11 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o._HeaderName = LatestRoom.Name .. " - "
 
 			if LatestRoom then
-				dec(o, folders.Rooms)
-
 				for _, sideroom in LatestRoom:GetChildren() do
-					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+					task.spawn(function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+						if sideroom.Name == "BaseSideroom" then
+							return
+						end
 						local folderSpecific = isfile(folders.Siderooms .. "/" .. sideroom.Name)
 
 						if not folderSpecific then
@@ -815,12 +828,12 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 						o2.Object = sideroom
 						o2._Name = sideroom.Name
-
-						if sideroom then
-							dec(o2, folderSpecific)
-						end
-					end
+						print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
+						dec(o2, folderSpecific)
+					end end)
 				end
+
+				dec(o, folders.Rooms)
 			end
 		end
 	end)
