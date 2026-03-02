@@ -498,47 +498,34 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	]]}
 
 	local function dec(o, dest)
-		--local decId = math.random(1, 999999)
-		local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
-		local TS = ts()
+		task.spawn(function()
+			--local decId = math.random(1, 999999)
+		    local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
+			local TS = ts()
 
-		--local fileID = decFileName-- .. tostring(decId)
-		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
-		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
+			--local fileID = decFileName-- .. tostring(decId)
+			local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
+			local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 
-		--print("Decompiling " .. FileName)
+			--print("Decompiling " .. FileName)
 
-		o.timeout = 16384
-		o.FilePath = FilePath
-		o.ReadMe = false
+			o.timeout = 16384
+			o.FilePath = FilePath
+			o.ReadMe = false
 
-		local waitTime = o._WaitTime or 0
+			local waitTime = o._WaitTime or 0
 
-		task.wait(waitTime)
+			task.wait(waitTime)
 
-		local Params = {
-			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-			SSI = "saveinstance",
-		}
-		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-		synsaveinstance(o)
+			local Params = {
+				RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+				SSI = "saveinstance",
+			}
+			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+			synsaveinstance(o)
 
-		--print("Decompiled " .. FileName)
-
-		--[[task.delay(3, function()
-			local fileFormat = ((o.Object and ".rbxmx") or ".rbxlx")
-			local finalName = FileName .. fileFormat
-	
-			if isfile(finalName) then
-				local data = readfile(finalName)
-				local newname = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "]")
-	
-				dest = (dest and (dest .. "/")) or mainpath
-	
-				writefile(dest .. newname .. fileFormat, data)
-				delfile(finalName)
-			end
-		end)]]
+			--print("Decompiled " .. FileName)
+		end)
 	end
 
 	local slowdownRooms = {
@@ -615,9 +602,9 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 				return
 			end
 
-			local Method = "Destroy" -- "AncestryChanged"
+			local Method = "Destroying" -- "AncestryChanged"
 			
-			if Method ~= "Destroy" then
+			if Method ~= "Destroying" then
 				task.wait(0.1)
 			end
 
