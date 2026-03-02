@@ -572,6 +572,10 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		if not toggles.AS then
 			return
 		end
+		
+		if #queue > 1 then
+			repeat task.wait() until #queue <= 1
+		end
 
 		local lr = GD_LR.Value
 		local previousr = workspace.CurrentRooms:FindFirstChild(tostring(lr - 1))
