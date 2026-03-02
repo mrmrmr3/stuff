@@ -801,7 +801,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 				
 			local o = {}
 
-			o.SaveBytecode = true
+			o.SaveBytecode = false
 			o.noscripts = true
 			o.mode = "invalid"
 			o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
@@ -812,7 +812,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			if LatestRoom then
 				local sc = 1
 				for _, sideroom in LatestRoom:GetChildren() do
-					task.delay(0.075 * sc, function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+					task.delay(0.1 * sc, function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
 						if sideroom.Name == "BaseSideroom" then
 							return
 						end
@@ -826,6 +826,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 
 						local o2 = {}
 
+						o2.noscripts = true
 						o2.mode = "invalid"
 						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 						o2.Object = sideroom
