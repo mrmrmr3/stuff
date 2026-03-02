@@ -72,7 +72,7 @@ Nav_Template.Parent = Nav
 Nav_Template.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
 Nav_Template.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Nav_Template.BorderSizePixel = 0
-Nav_Template.Size = UDim2.new(0.300000012, 0, 1, 0)
+Nav_Template.Size = UDim2.new(0.25, 0, 1, 0)
 Nav_Template.Visible = false
 Nav_Template.ZIndex = 55
 Nav_Template.Font = Enum.Font.Unknown
@@ -131,6 +131,7 @@ Arguement.Text = ""
 Arguement.TextColor3 = Color3.fromRGB(0, 0, 0)
 Arguement.TextSize = 14.000
 Arguement.TextTransparency = 1.000
+Arguement.TextScaled = true
 
 UICorner_3.CornerRadius = UDim.new(0.100000001, 0)
 UICorner_3.Parent = Arguement
@@ -178,6 +179,7 @@ Arg_Template.Text = "_Template"
 Arg_Template.TextColor3 = Color3.fromRGB(0, 0, 0)
 Arg_Template.TextSize = 24.000
 Arg_Template.TextWrapped = true
+Arg_Template.TextScaled = true
 
 UICorner_4.CornerRadius = UDim.new(0.100000001, 0)
 UICorner_4.Parent = Arg_Template
@@ -224,15 +226,15 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 
 	local UIS = game:GetService("UserInputService")
 	local TS = 24
-	
+
 	UIS.InputBegan:Connect(function(Input, GPE)
 		if GPE then return end
-		
+
 		if Input.KeyCode == Enum.KeyCode.RightBracket then
 			script.Parent.Enabled = not script.Parent.Enabled
 		end
 	end)
-	
+
 	local function Convert(v)
 		if typeof(v) == "Vector3" then
 			local vPos = tostring(
@@ -240,7 +242,7 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 					string.format("%.3f", v.Y) .. ", " ..
 					string.format("%.3f", v.Z)
 			)
-	
+
 			return "Vector3.new(" .. vPos .. ")"
 		elseif typeof(v) == "CFrame" then
 			local vPos = tostring(
@@ -248,127 +250,127 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 					string.format("%.3f", v.Position.Y) .. ", " ..
 					string.format("%.3f", v.Position.Z)
 			)
-	
+
 			local vLV = tostring(
 				string.format("%.3f", v.LookVector.X) .. ", " ..
 					string.format("%.3f", v.LookVector.Y) .. ", " ..
 					string.format("%.3f", v.LookVector.Z)
 			)
-	
+
 			local Pos = "Vector3.new(" .. vPos .. ")"
 			local LV = "L-Vector3.new(" .. vLV .. ")"
-	
+
 			return "CFrame.new(" .. Pos .. ", " .. LV .. ")"
 		elseif typeof(v) == "Color3" then
 			local r = math.floor(v.R * 255 + 0.5)
 			local g = math.floor(v.G * 255 + 0.5)
 			local b = math.floor(v.B * 255 + 0.5)
-	
+
 			return "Color3.fromRGB(" .. tostring(r) .. ", " .. tostring(g) .. ", " .. tostring(b) .. ")"
 		elseif typeof(v) == "string" then
 			return ('"' .. tostring(v) .. '"')
 		elseif typeof(v) == "Instance" then
 			return (tostring(v:GetFullName()))
 		end
-	
+
 		return tostring(v)
 	end
-	
+
 	local function ColorUp(Type: string)
 		if Type == "{" or Type == "}" then
 			return Color3.fromRGB(85, 170, 255)
 		elseif string.find(Type, "CFrame") or string.find(Type, "Vector3") then
 			return Color3.fromRGB(255, 85, 127)
 		end
-		
+
 		return Color3.fromRGB(85, 255, 127)
 	end
-	
+
 	local Container = script.Parent.Container
 	local MainTemp = Container.Main.Main_Template
 	local NavTemp = Container.Nav.Nav_Template
-	
+
 	local Remotes = {}
 	local Blacklist = {
 		"MotorReplication",
 		"UpdateMinecartPosition"
 	}
-	
+
 	local function Connect(Remote: RemoteEvent | RemoteFunction)
 		if Remote.Parent.Name == "EntityInfo" then return end
 		if table.find(Blacklist, Remote.Name) then return end
-		
+
 		local NewRemote = NavTemp:Clone()
 		NewRemote.Name = Remote.Name
 		NewRemote.Parent = Container.Nav
 		NewRemote.Visible = true
 		NewRemote.Text = Remote.Name
 		NewRemote.LayoutOrder = table.find(Remotes, Remote)
-	
+
 		local NewMain = MainTemp:Clone()
 		NewMain.Visible = false
 		NewMain.Name = Remote.Name
 		NewMain.Parent = Container.Main
 		NewMain.Title.Text = Remote.Name .. " | " .. tostring(Remote:GetFullName())
-	
+
 		NewRemote.MouseButton1Up:Connect(function()
 			for _, a in Container.Main:GetChildren() do
 				a.Visible = a == NewMain
 			end
 		end)
-		
+
 		local A = 0
-		
+
 		if Remote:IsA("RemoteEvent") or Remote:IsA("UnreliableRemoteEvent") then
 			Remote.OnClientEvent:Connect(function(...)
 				local args = {...}
 				local v_args = {}
-				
+
 				A += 1
-	
+
 				for Index, Value in args do
 					if typeof(Value) == "table" then
 						table.insert(v_args, "{")
-	
+
 						for Index, Value in Value do
 							local Display = Convert(Value)
-	
+
 							if typeof(Index) ~= "number" then
 								Display = "[" .. tostring(Index) .. "] = " .. Display
 							end
-	
+
 							table.insert(v_args, Display)
 						end
-	
+
 						table.insert(v_args, "}")
 					else
 						table.insert(v_args, Convert(Value))
 					end
 				end
-				
+
 				local NewArgs = NewMain.Arguement:Clone()
 				NewArgs.Visible = true
 				NewArgs.LayoutOrder = -A
 				NewArgs.Parent = NewMain
-				
+
 				for Index, Arg: string in v_args do
 					local ArgTemp = NewArgs.Args.Arg_Template:Clone()
 					local TextSize = game.TextService:GetTextSize(Arg, TS, "Montserrat", Vector2.new(9999, 9999))
-					
+
 					local Factor = 0.58
-					
+
 					ArgTemp.Name = Index
 					ArgTemp.LayoutOrder = Index
 					ArgTemp.Text = Arg
-					
+
 					ArgTemp.BackgroundColor3 = ColorUp(Arg)
-					
+
 					ArgTemp.UIStroke.Color = Color3.fromRGB(
 						math.floor(ColorUp(Arg).R * Factor),
 						math.floor(ColorUp(Arg).G * Factor),
 						math.floor(ColorUp(Arg).B * Factor)
 					)
-					
+
 					ArgTemp.Size = UDim2.new(0, math.max(TextSize.X * 1.5, 25), 1, 0)
 					ArgTemp.Parent = NewArgs.Args
 					ArgTemp.Visible = true
@@ -376,19 +378,19 @@ local function XAJWUIU_fake_script() -- RS_.LocalScript
 			end)
 		end
 	end
-	
+
 	for _, Remote in game.ReplicatedStorage:GetDescendants() do
 		if Remote:IsA("RemoteEvent") or Remote:IsA("RemoteFunction") then
 			table.insert(Remotes, Remote)
-			
+
 			Connect(Remote)
 		end
 	end
-	
+
 	game.ReplicatedStorage.DescendantAdded:Connect(function(Remote)
 		if Remote:IsA("RemoteEvent") or Remote:IsA("RemoteFunction") then
 			table.insert(Remotes, Remote)
-			
+
 			Connect(Remote)
 		end
 	end)
