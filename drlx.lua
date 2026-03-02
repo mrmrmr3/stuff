@@ -437,8 +437,17 @@ Open.TextWrapped = true
 
 local function JSCW_fake_script() -- DRLX.LocalScript 
 	local script = Instance.new('LocalScript', DRLX)
-
+	
+	local DecIgnore = {"AntiBridge", "AntiPipeGap"}
 	local RS = game:GetService("ReplicatedStorage")
+	
+	local gd = RS:WaitForChild("GameData")
+	
+	local Floor = gd:WaitForChild("Floor").Value
+	local FloorSpecific = gd:WaitForChild("FloorSpecific").Value
+	local GameSeed = (Floor ~= "Fools" and tostring(gd.GameSeed.Value)) or ""
+	local GD_LR = gd:WaitForChild("LatestRoom")
+	
 	local Player = game.Players.LocalPlayer
 
 	local m = script.Parent:WaitForChild("Main")
@@ -461,15 +470,11 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		end
 	end
 
-	local function ts()
+	local function todate()
 		return tostring(os.date("%I-%M-%S"))
 	end
-
-	local gd = RS:WaitForChild("GameData")
-	local Floor = gd:WaitForChild("Floor").Value
-	local GameSeed = (Floor ~= "Fools" and tostring(gd.GameSeed.Value)) or ""
-	local FloorSpecific = gd:WaitForChild("FloorSpecific").Value
-	local MainFolder = Floor .. FloorSpecific .. " - [" .. ts() .. "]"
+	
+	local MainFolder = Floor .. FloorSpecific .. " - [" .. todate() .. "]"
 	local mainpath = MainFolder .. "/"
 
 	makefolder(MainFolder)
@@ -486,44 +491,52 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	end
 
 	--/ Decomps
-
+	
+	local MAIN_GAME = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
 	local decomps = c:WaitForChild("Decomps")
-
-	local decIds = {--[[
-		[1] = {
-			Name = decFileName,
-			Ts = ts(),
-			ID = 9999,
-		}
-	]]}
+	local currentlyDecompiling = false
+	local queue = {}
 
 	local function dec(o, dest)
-		--local decId = math.random(1, 999999)
-		local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
-		local TS = ts()
+		local func; func = function()
+			currentlyDecompiling = true
+			local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
+			local TS = todate()
 
-		--local fileID = decFileName-- .. tostring(decId)
-		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
-		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
+			local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
+			local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 
-		--print("Decompiling " .. FileName)
+			--print("Decompiling " .. FileName)
 
-		o.timeout = 16384
-		o.FilePath = FilePath
-		o.ReadMe = false
+			o.timeout = 16384
+			o.FilePath = FilePath
+			o.ReadMe = false
 
-		local waitTime = o._WaitTime or 0
+			local waitTime = o._WaitTime or 0
 
-		task.wait(waitTime)
+			task.wait(waitTime)
 
-		local Params = {
-			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-			SSI = "saveinstance",
-		}
-		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-		synsaveinstance(o)
+			local Params = {
+				RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+				SSI = "saveinstance",
+			}
+			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+			synsaveinstance(o)
+			currentlyDecompiling = false
+			table.remove(queue, table.find(queue, func))
 
-		--print("Decompiled " .. FileName)
+			if queue[1] then
+				queue[1]()
+			end
+
+			--print("Decompiled " .. FileName)
+		end
+		
+		table.insert(queue, func)
+		
+		if not currentlyDecompiling and queue[1] then
+			queue[1]()
+		end
 	end
 
 	local slowdownRooms = {
@@ -560,14 +573,14 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			return
 		end
 
-		local lr = game.ReplicatedStorage.GameData.LatestRoom.Value
+		local lr = GD_LR.Value
 		local previousr = workspace.CurrentRooms:FindFirstChild(tostring(lr - 1))
 		local nextr = workspace.CurrentRooms:FindFirstChild(tostring(lr + 1))
 		local currentr = workspace.CurrentRooms:FindFirstChild(tostring(lr))
 
 		task.spawn(function()
 			pcall(function()
-				require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).chaseMove = false
+				MAIN_GAME.chaseMove = false
 			end)
 		end)
 
@@ -577,14 +590,14 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 
 		task.spawn(function()
 			pcall(function()
-				require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).chaseMove = false
+				MAIN_GAME.chaseMove = false
 			end)
 		end)
 
 		game.ReplicatedStorage.RemotesFolder.AdminPanelRunCommand:FireServer("SkipRoom", {})
 		game.ReplicatedStorage.RemotesFolder.AdminPanelRunCommand:FireServer("DELETE ALL", {})
 
-		task.wait(1.5)
+		task.wait(2)
 
 		skipRoom()
 
@@ -608,7 +621,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			end
 
 			local Method = "Destroying" -- "AncestryChanged"
-			
+
 			if Method ~= "Destroying" then
 				task.wait(0.1)
 			end
@@ -718,12 +731,14 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = true
 			o.SaveBytecode = true
 			o.noscripts = true
+			
+			local savePath = `{folders.misc}/bytecode`
 
-			if not isfile(folders.misc .. "/bytecode") then
-				makefolder(folders.misc .. "/bytecode")
+			if not isfile(savePath) then
+				makefolder(savePath)
 			end
 
-			dec(o, folders.misc .. "/bytecode")
+			dec(o, savePath)
 		end,
 	}
 
@@ -737,7 +752,6 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		toggles[name] = val
 
 		local toggleUI = decomps:WaitForChild("Toggles"):FindFirstChild(name)
-
 		toggleUI.Indicator.BackgroundColor3 = val and Color3.fromRGB(85, 255, 0) or Color3.fromRGB(255, 0, 0)
 
 		if val == true and tActions[name] then
@@ -764,20 +778,74 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			end)
 		end
 	end
-	
+
 	script.Parent:WaitForChild("Open").MouseButton1Up:Connect(function()
 		m.Visible = true
 		script.Parent.Open.Visible = false
+		
 		for _, toggle in decomps:WaitForChild("Toggles"):GetChildren() do
 			if toggle:IsA("TextButton") then
 				toggleDec(toggle.Name, toggles[toggle.Name])
 			end
 		end
 	end)
+	
+	local function decroom(LatestRoom: Model)
+		if table.find(roomBlacklist, LatestRoom:GetAttribute("RawName") or "") then
+			return
+		end
+
+		local o = {}
+
+		o.SaveBytecode = false
+		o.noscripts = true
+		o.mode = "invalid"
+		o.DecompileIgnore = DecIgnore
+		o.Object = LatestRoom
+		o._Name = getRoomName(LatestRoom)
+		o._HeaderName = LatestRoom.Name .. " - "
+
+		if LatestRoom then
+			local SideroomBlacklist = {
+				"BaseSideroom",
+				"SideroomDupe",
+				"SideroomSpace",
+			}
+
+			for _, sideroom in LatestRoom:GetChildren() do
+				if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+					if table.find(SideroomBlacklist, sideroom.Name) then
+						return
+					end
+					
+					local savePath = `{folders.Siderooms}/{sideroom.Name}`
+					local folderSpecific = isfile(savePath)
+
+					if not folderSpecific then
+						makefolder(savePath)
+						folderSpecific = (savePath)
+					end
+
+					local o2 = {}
+
+					o2.noscripts = true
+					o2.mode = "invalid"
+					o2.DecompileIgnore = DecIgnore
+					o2.Object = sideroom
+					o2._Name = sideroom.Name
+
+					dec(o2, folderSpecific)
+					print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
+				end
+			end
+
+			dec(o, folders.Rooms)
+		end
+	end
 
 	RS.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Connect(function()
 		task.spawn(function()
-			local nr = workspace.CurrentRooms:WaitForChild(tostring(game.ReplicatedStorage.GameData.LatestRoom.Value) + 1)
+			local nr = workspace.CurrentRooms:WaitForChild(tostring(GD_LR.Value) + 1)
 
 			task.delay(0.5, function()
 				local n = nr:FindFirstChild("PathfindNodes")
@@ -792,76 +860,15 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 
 		if toggles.LR == true then
 			local LatestRoom: Model = workspace.CurrentRooms:FindFirstChild(RS.GameData.LatestRoom.Value)
-			
-			if table.find(roomBlacklist, LatestRoom:GetAttribute("RawName") or "") then
-				return
-			end
-				
-			local o = {}
 
-			o.SaveBytecode = false
-			o.noscripts = true
-			o.mode = "invalid"
-			o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
-			o.Object = LatestRoom
-			o._Name = getRoomName(LatestRoom)
-			o._HeaderName = LatestRoom.Name .. " - "
-
-			if LatestRoom then
-				local sc = 0
-				local SideroomBlacklist = {
-					"BaseSideroom",
-				}
-				
-				for _, sideroom in LatestRoom:GetChildren() do
-					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
-						if table.find(SideroomBlacklist, sideroom.Name) then
-							return
-						end
-						
-						local folderSpecific = isfile(folders.Siderooms .. "/" .. sideroom.Name)
-
-						sc += 1
-						if not folderSpecific then
-							makefolder(folders.Siderooms .. "/" .. sideroom.Name)
-							folderSpecific = (folders.Siderooms .. "/" .. sideroom.Name)
-						end
-
-						local o2 = {}
-
-						o2.noscripts = true
-						o2.mode = "invalid"
-						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
-						o2.Object = sideroom
-						o2._Name = sideroom.Name
-						o2._WaitTime = 0.075 * sc
-								
-						dec(o2, folderSpecific)
-						print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
-					end
-				end
-
-				dec(o, folders.Rooms)
-			end
+			decroom(LatestRoom)
 		end
 	end)
 
-	for i, v in workspace.CurrentRooms:GetChildren() do
-		task.spawn(function()
-			if v:FindFirstChild("Assets") and i <= math.max(game.ReplicatedStorage.GameData.LatestRoom.Value, 1) then
-				local o = {}
-
-				o.SaveBytecode = true
-				o.noscripts = true
-				o.mode = "invalid"
-				o.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
-				o.Object = v
-				o._Name = getRoomName(v)
-				o._HeaderName = v.Name .. " - "
-
-				dec(o, folders.Rooms)
-			end
-		end)
+	for i, room in workspace.CurrentRooms:GetChildren() do
+		if room:FindFirstChild("Assets") and tonumber(room.Name) <= GD_LR.Value then
+			decroom(room)
+		end
 	end
 end
 coroutine.wrap(JSCW_fake_script)()
