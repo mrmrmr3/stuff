@@ -812,7 +812,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			if LatestRoom then
 				local sc = 1
 				for _, sideroom in LatestRoom:GetChildren() do
-					task.delay(0.1 * sc, function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+					task.spawn(function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
 						if sideroom.Name == "BaseSideroom" then
 							return
 						end
