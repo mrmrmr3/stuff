@@ -1,3 +1,40 @@
+local _INGAME = game.ReplicatedStorage:WaitForChild("GameData"):WaitForChild("InGame").Value == true
+
+local T_SG = "_ToApply_SG"
+local T_CFG = "_ToApply_CFG"
+
+local function Apply_D_Properties(Object: Instance)
+	if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
+		Object:AddTag(T_CFG)
+		Object:SetAttribute(T_CFG, tostring(Object.CollisionFidelity.Name))
+		Object:SetAttribute(T_CFG .. "_2", tostring(Object.CollisionGroup))
+	elseif Object:IsA("Sound") then
+		if Object.SoundGroup then
+			Object:AddTag(T_SG)
+			Object:SetAttribute(T_SG, Object.SoundGroup:GetFullName())
+		end
+	end
+end
+
+if not _INGAME then
+	local search = {
+		workspace,
+		game.Lighting,
+		game.ReplicatedFirst,
+		game.ReplicatedStorage,
+		game.StarterGui,
+		game.StarterPlayer
+	}
+	
+	for _, Service in search do
+		for _, Desc in Service:GetDescendants() do
+			Apply_D_Properties(Desc)
+		end
+	end
+	
+	return
+end
+
 local Leader: Configuration = Instance.new("Configuration")
 Leader.Name = "DLOG"
 Leader.Parent = game.ReplicatedFirst
@@ -69,22 +106,6 @@ local Char = LocalPlayer.Character
 LocalPlayer.CharacterAdded:Connect(function(NewChar)
 	Char = NewChar
 end)
-
-local T_SG = "_ToApply_SG"
-local T_CFG = "_ToApply_CFG"
-
-local function Apply_D_Properties(Object: Instance)
-	if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
-		Object:AddTag(T_CFG)
-		Object:SetAttribute(T_CFG, tostring(Object.CollisionFidelity.Name))
-		Object:SetAttribute(T_CFG .. "_2", tostring(Object.CollisionGroup))
-	elseif Object:IsA("Sound") then
-		if Object.SoundGroup then
-			Object:AddTag(T_SG)
-			Object:SetAttribute(T_SG, Object.SoundGroup:GetFullName())
-		end
-	end
-end
 
 task.spawn(function()
 	game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Connect(function()
