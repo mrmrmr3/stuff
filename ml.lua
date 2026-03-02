@@ -15,7 +15,7 @@ end
 
 local lootholders = {}
 
-local lh = Instance.new("Folder", game.ReplicatedStorage.GAME_DATA.Stuff)
+local lh = Instance.new("Folder", game.ReplicatedFirst.DLOG)
 lh.Name = "LootHolders"
 
 workspace.DescendantAdded:Connect(function(obj)
