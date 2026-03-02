@@ -1,6 +1,6 @@
 local Leader: Configuration = Instance.new("Configuration")
-Leader.Name = "GAME_DATA"
-Leader.Parent = game.ReplicatedStorage
+Leader.Name = "DLOG"
+Leader.Parent = game.ReplicatedFirst
 
 local EntityData: Folder = Instance.new("Folder")
 EntityData.Parent = Leader
@@ -36,6 +36,14 @@ local NewAttributes: Folder = Instance.new("Folder")
 NewAttributes.Name = "NewAttributes"
 NewAttributes.Parent = Leader
 
+local PlayerAtts: Folder = Instance.new("Folder")
+PlayerAtts.Name = "Player"
+PlayerAtts.Parent = NewAttributes
+
+local CharacterAtts: Folder = Instance.new("Folder")
+CharacterAtts.Name = "Character"
+CharacterAtts.Parent = NewAttributes
+
 local Stuff: Folder = Instance.new("Folder")
 Stuff.Name = "Stuff"
 Stuff.Parent = Leader
@@ -52,62 +60,72 @@ local function newRoomData(Room: Model)
 	local rd = Info:FindFirstChild(Room.Name) or Instance.new("Folder")
 	rd.Name = Room.Name
 	rd.Parent = Info
-	
+
 	return rd
 end
 
 local LocalPlayer = game.Players.LocalPlayer
 local Char = LocalPlayer.Character
+LocalPlayer.CharacterAdded:Connect(function(NewChar)
+	Char = NewChar
+end)
+
+local T_SG = "_ToApply_SG"
+local T_CFG = "_ToApply_CFG"
+
+local function Apply_D_Properties(Object: Instance)
+	if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
+		Object:AddTag(T_CFG)
+		Object:SetAttribute(T_CFG, tostring(Object.CollisionFidelity.Name))
+		Object:SetAttribute(T_CFG .. "_2", tostring(Object.CollisionGroup))
+	elseif Object:IsA("Sound") then
+		if Object.SoundGroup then
+			Object:AddTag(T_SG)
+			Object:SetAttribute(T_SG, Object.SoundGroup:GetFullName())
+		end
+	end
+end
 
 task.spawn(function()
 	game.ReplicatedStorage.GameData.LatestRoom:GetAttributeChangedSignal("Value"):Connect(function()
-		local newTs = Instance.new("NumberValue", Timestamps)
+		local newTs = Instance.new("NumberValue")
 		newTs.Name = tostring(game.ReplicatedStorage.GameData.LatestRoom.Value)
 		newTs.Value = os.clock()
+		newTs.Parent = Timestamps
 	end)
-	
-	task.spawn(function()
-		local function wsdescn(Object: Instance)
-			if Object:IsA("TriangleMeshPart") or Object:IsA("MeshPart") or Object:IsA("UnionOperation") or Object:IsA("PartOperation") then
-				Object:AddTag("d_setcolfid")
-				Object:SetAttribute("_colfid", tostring(Object.CollisionFidelity.Name))
-			elseif Object:IsA("Sound") then
-				if Object.SoundGroup then
-					Object:AddTag("d_setsoundgroup")
-					Object:SetAttribute("_sfxgroup", Object.SoundGroup.Name)
-				end
-			end
-		end
 
+	task.spawn(function()
 		workspace.DescendantAdded:Connect(function(Object: Instance)
-			wsdescn(Object)
+			Apply_D_Properties(Object)
 		end)
 
 		for _, v in workspace:GetDescendants() do
-			wsdescn(v)
+			Apply_D_Properties(v)
 		end
 	end)
 end)
 
 local attributesIndex = {}
-local function newAttribute(Name: string)
-	if table.find(attributesIndex, Name) then
+local function newAttribute(Name: string, Parent)
+	--[[if table.find(attributesIndex, Name) then
 		return
 	end
 
-	table.insert(attributesIndex, Name)
+	table.insert(attributesIndex, Name)]]
+	
+	local index = (attributesIndex[Name] or 0) + 1
+	attributesIndex[Name] = index
 
 	local na = Instance.new("StringValue")
-	na.Name = Name
-	na.Parent = NewAttributes
-	pcall(function() na:SetAttribute("Drops", #workspace.Drops:GetChildren()) end)
+	na.Name = `{Name}_{index}`
+	na.Parent = Parent or NewAttributes
 	na:SetAttribute("Number", game.ReplicatedStorage.GameData.LatestRoom.Value)
 
 	return na
 end
 
 LocalPlayer.AttributeChanged:Connect(function(Name: string)
-	local na = newAttribute(Name)
+	local na = newAttribute(Name, PlayerAtts)
 
 	if na then
 		na.Value = tostring(LocalPlayer:GetAttribute(Name))
@@ -115,7 +133,7 @@ LocalPlayer.AttributeChanged:Connect(function(Name: string)
 end)
 
 Char.AttributeChanged:Connect(function(Name: string)
-	local na = newAttribute(Name)
+	local na = newAttribute(Name, CharacterAtts)
 
 	if na then
 		na.Value = tostring(Char:GetAttribute(Name))
@@ -124,7 +142,7 @@ end)
 
 Char.PrimaryPart.ChildAdded:Connect(function(child)
 	if child:IsA("Light") then
-		local start = os.clock()
+		--[[local start = os.clock()
 
 		local newchild = child:Clone()
 		newchild.Parent = Stuff
@@ -161,12 +179,12 @@ Char.PrimaryPart.ChildAdded:Connect(function(child)
 				new2:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
 				new2:SetAttribute("LastCandy", Char:GetAttribute("LastCandy"))
 			end
-		end)
+		end)]]
 	end
 end)
 
 local function DeepClone(Object: Instance, Folder: Folder, Time: number)
-	task.delay(Time or 0.5, function()
+	task.delay(Time or 0.1, function()
 		local Object1: Instance = Object:Clone()
 		Object1.Parent = Folder or Misc
 	end)
@@ -185,6 +203,11 @@ local RepCache = {}
 local function CheckForRpntc(Object: Instance)
 	if Object:IsA("Model") then
 		if string.find(Object.Name, "Repentance") then
+			local Crux: Model = Object:Clone()
+			Crux.Parent = Repentance
+		end
+		
+		--[[if string.find(Object.Name, "Repentance") then
 			local Time = os.clock()
 			local Index = 0
 			local NewRep = Instance.new("Folder")
@@ -238,7 +261,7 @@ local function CheckForRpntc(Object: Instance)
 					task.wait(0.1)
 				end
 			end)
-		end
+		end]]
 	end
 end
 
@@ -246,35 +269,25 @@ local function getRoomName(room: Model)
 	return room:GetAttribute("RawName") or room:GetAttribute("OriginalName") or room.Name
 end
 
-local function DescendantAdded(Object: BasePart | Instance)
+local function RoomDescendantAdded(Room, Object: BasePart | Instance)
 	local Attributes: {[string]: any} = Object:GetAttributes()
 	local Module: string = Attributes.LoadModule
-	local Room: Model = findRoom(Object)
+	--local Room: Model = findRoom(Object)
 
 	if Object:IsA("BasePart") then
-		if Object.CollisionGroup == "BaseCheck" then
-			task.delay(1, function()
-				Object:SetAttribute("ROOM", getRoomName(Room))
-				DeepClone(Object, newRoomData(Room), 0)
-			end)
-		end
+		
 	elseif Object:IsA("Folder") then
 		if Object.Name == "PathfindNodes" then
-			DeepClone(Object, newRoomData(Room))
+			Object.Destroying:Connect(function()
+				DeepClone(Object, newRoomData(Room))
+			end)
 		end
 	elseif Object:IsA("Model") then
 		CheckForRpntc(Object)
-	elseif string.find(string.lower(Object.Name), "mobble") or string.find(string.lower(Object.Name), "jack") then
+	elseif string.find(string.lower(Object.Name), "mobble") or string.find(string.lower(Object.Name), "shadow") then
 		Object.Destroying:Once(function()
-			local new = Object:Clone()
-			Object.Parent = EntityData
+			DeepClone(Object, EntityData)
 		end)
-
-		for i = 0, 5 do
-			task.spawn(function()
-				DeepClone(Object, EntityData, i / 10)
-			end)
-		end
 	end
 end
 
@@ -282,7 +295,7 @@ local function RoomAdded(Room: Model)
 	if Room:IsA("Model") then
 		Room.DescendantAdded:Connect(function(desc)
 			pcall(function()
-				DescendantAdded(desc)
+				RoomDescendantAdded(Room, desc)
 			end)
 		end)
 	end
@@ -301,20 +314,18 @@ workspace.ChildAdded:Connect(WorkspaceAdded)
 local function AmbientAdded(Attachment: Attachment)
 	task.spawn(function()
 		if Attachment:IsA("Attachment") then
-			task.delay(0.5, function()
+			task.delay(0.1, function()
 				local Sound: Sound = Attachment:FindFirstChildOfClass("Sound")
 
 				if Sound then
-					for _, S: Sound in Sounds:GetChildren() do
-						if S.SoundId == Sound.SoundId then
+					for _, S in Sounds:GetChildren() do
+						if S:IsA("Sound") and S.SoundId == Sound.SoundId then
 							return
 						end
 					end
 
 					local Ambience: Sound = Sound:Clone()
-
 					Ambience.Parent = Sounds
-
 					pcall(function()
 						Ambience:Stop()
 						Ambience.TimePosition = 0
