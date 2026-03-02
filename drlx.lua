@@ -498,34 +498,32 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	]]}
 
 	local function dec(o, dest)
-		task.spawn(function()
-			--local decId = math.random(1, 999999)
-		    local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
-			local TS = ts()
+		--local decId = math.random(1, 999999)
+		local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
+		local TS = ts()
 
-			--local fileID = decFileName-- .. tostring(decId)
-			local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
-			local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
+		--local fileID = decFileName-- .. tostring(decId)
+		local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
+		local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 
-			--print("Decompiling " .. FileName)
+		--print("Decompiling " .. FileName)
 
-			o.timeout = 16384
-			o.FilePath = FilePath
-			o.ReadMe = false
+		o.timeout = 16384
+		o.FilePath = FilePath
+		o.ReadMe = false
 
-			local waitTime = o._WaitTime or 0
+		local waitTime = o._WaitTime or 0
 
-			task.wait(waitTime)
+		task.wait(waitTime)
 
-			local Params = {
-				RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
-				SSI = "saveinstance",
-			}
-			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-			synsaveinstance(o)
+		local Params = {
+			RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
+			SSI = "saveinstance",
+		}
+		local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+		synsaveinstance(o)
 
-			--print("Decompiled " .. FileName)
-		end)
+		--print("Decompiled " .. FileName)
 	end
 
 	local slowdownRooms = {
@@ -810,12 +808,17 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o._HeaderName = LatestRoom.Name .. " - "
 
 			if LatestRoom then
-				local sc = 1
+				local sc = 0
+				local SideroomBlacklist = {
+					"BaseSideroom",
+				}
+				
 				for _, sideroom in LatestRoom:GetChildren() do
-					task.spawn(function() if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
-						if sideroom.Name == "BaseSideroom" then
+					if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
+						if table.find(SideroomBlacklist, sideroom.Name) then
 							return
 						end
+						
 						local folderSpecific = isfile(folders.Siderooms .. "/" .. sideroom.Name)
 
 						sc += 1
@@ -831,9 +834,11 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 						o2.DecompileIgnore = {"AntiBridge", "AntiPipeGap"}
 						o2.Object = sideroom
 						o2._Name = sideroom.Name
-						print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
+						o2._WaitTime = 0.075 * sc
+								
 						dec(o2, folderSpecific)
-					end end)
+						print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
+					end
 				end
 
 				dec(o, folders.Rooms)
