@@ -819,7 +819,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			for _, sideroom in LatestRoom:GetChildren() do
 				if sideroom:IsA("Model") and (string.find(sideroom.Name, "Sideroom") or (sideroom:GetAttribute("Weight") and (sideroom:GetAttribute("RoomBegin")) or string.find(sideroom.Name, "Closet"))) then
 					if table.find(SideroomBlacklist, sideroom.Name) then
-						return
+						continue
 					end
 					
 					local savePath = `{folders.Siderooms}/{sideroom.Name}`
