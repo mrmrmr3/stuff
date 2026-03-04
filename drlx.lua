@@ -573,8 +573,8 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			return
 		end
 		
-		if #queue > 1 then
-			repeat task.wait() until #queue <= 1
+		if #queue > 0 then
+			repeat task.wait() until #queue == 0
 		end
 
 		local lr = GD_LR.Value
@@ -624,7 +624,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 				return
 			end
 
-			local Method = "Destroying" -- "AncestryChanged"
+			local Method = "AncestryChanged"
 
 			if Method ~= "Destroying" then
 				task.wait(0.1)
