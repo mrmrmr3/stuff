@@ -112,7 +112,7 @@ togglelist.BorderColor3 = Color3.fromRGB(0, 0, 0)
 togglelist.BorderSizePixel = 0
 togglelist.Position = UDim2.new(0.5, 0, 0.975000024, 0)
 togglelist.Selectable = false
-togglelist.Size = UDim2.new(0.949999988, 0, 0.870000005, 0)
+togglelist.Size = UDim2.new(0.949999988, 0, 0.725, 0)
 togglelist.Visible = false
 togglelist.ZIndex = 5
 togglelist.CanvasSize = UDim2.new(0, 0, 0, 40)
@@ -301,7 +301,7 @@ arg.Visible = false
 arg.Font = Enum.Font.Montserrat
 arg.Text = "[1]: game.Workspace.CurrentRooms.100._DamHandler.Flood1.RandomLightAttach.PointLight"
 arg.TextColor3 = Color3.fromRGB(255, 255, 255)
-arg.TextSize = 36.000
+arg.TextSize = 12
 arg.TextXAlignment = Enum.TextXAlignment.Left
 
 UIListLayout_3.Parent = args
@@ -455,7 +455,7 @@ Pad.BackgroundTransparency = 0.700
 Pad.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Pad.BorderSizePixel = 0
 Pad.LayoutOrder = -2
-Pad.Size = UDim2.new(0.00499999989, 0, 0, 100)
+Pad.Size = UDim2.new(0.00499999989, 0, 0.7, 0)
 
 UICorner_11.CornerRadius = UDim.new(1, 0)
 UICorner_11.Parent = Pad
@@ -737,7 +737,7 @@ TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.BackgroundTransparency = 1.000
 TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel.BorderSizePixel = 0
-TextLabel.Position = UDim2.new(0.0200000256, 0, 0.980000019, 0)
+TextLabel.Position = UDim2.new(1, 0, 0.03, 0)
 TextLabel.Size = UDim2.new(1, 0, 0.0299999993, 0)
 TextLabel.Font = Enum.Font.Montserrat
 TextLabel.Text = "exploiting for decompiling/debugging purposes!"
@@ -755,7 +755,7 @@ remotes_2.AnchorPoint = Vector2.new(0.5, 0)
 remotes_2.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 remotes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 remotes_2.BorderSizePixel = 0
-remotes_2.Position = UDim2.new(0.574999988, 0, 0.0149999997, 0)
+remotes_2.Position = UDim2.new(0.75, 0, 0.03, 0)
 remotes_2.Selectable = false
 remotes_2.Size = UDim2.new(0.0599999987, 0, 0.0599999987, 0)
 remotes_2.ZIndex = 3
@@ -778,112 +778,118 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 	local script = Instance.new('LocalScript', _rs)
 
 	print("initializing inbound remote viewer")
-	
+
 	local remotesFolder = game.ReplicatedStorage:WaitForChild("RemotesFolder", 3)
-	
+
 	if game.ReplicatedStorage:WaitForChild("GameData"):WaitForChild("Floor").Value == "Fools" then
 		remotesFolder = game.ReplicatedStorage:WaitForChild("EntityInfo")
 	end
-	
+
 	local _REMOTESLIST = { unpack(remotesFolder:GetChildren()) }
-	
+
 	for _, remote: RemoteEvent in game.ReplicatedStorage:GetDescendants() do
 		if remote.Parent.Name == "EntityInfo" or remote.Parent.Name == "RemotesFolder" then
 			continue
 		end
-		
+
 		if remote:IsA("RemoteEvent") then
 			table.insert(_REMOTESLIST, remote)
 		end
 	end
-	
+
 	local _paused = false
 	local _page: "inbound" | "toggle" = "inbound"
-	
+
 	local main = script.Parent:WaitForChild("main")
 	local buttons = main.buttons
-	
+
 	main.tlButtons.time.Text = tostring(os.clock())
-	
+
 	buttons.pause.MouseButton1Up:Connect(function()
 		_paused = not _paused
 		buttons.pause.Text = _paused and "..." or "II"
 	end)
-	
+
 	main.togglelist.Visible = false
 	main.inboundlist.Visible = true
-	
+
 	buttons.remotes.MouseButton1Up:Connect(function()
 		local currentPage = main:FindFirstChild(_page .. "list")
-		
+
 		if _page == "inbound" then
 			_page = "toggle"
 		else
 			_page = "inbound"
 		end
-		
+
 		local newPage = main:FindFirstChild(_page .. "list")
-		
+
 		currentPage.Visible = false
 		newPage.Visible = true
-		
+
 		main.title.Text = string.upper(_page)
 	end)
-	
+
 	buttons.close.MouseButton1Up:Connect(function()
 		main.Visible = false
 		script.Parent.remotes.Visible = true
 	end)
-	
+
 	script.Parent.remotes.MouseButton1Up:Connect(function()
 		main.Visible = true
 		script.Parent.remotes.Visible = false
 	end)
-	
+
 	function _conv(v, spaces, usesemicolon, depth, dontConvertNumber: boolean)
 		if type(v) ~= 'table' then
 			if type(v) == "string" then
-				return tostring(`"{v}"`)
+				local thing = tostring(v)
+				
+				if string.sub(thing, 1, 1) ~= "" and string.sub(thing, #thing, #thing) ~= "" then
+					return tostring(`"{v}"`)
+				else
+					return thing
+				end
 			elseif typeof(v) == "Vector3" then
 				return tostring(`Vector3.new({v})`)
 			elseif typeof(v) == "Color3" then
 				local r = math.floor(v.R * 255)
 				local g = math.floor(v.G * 255)
 				local b = math.floor(v.B * 255)
-	
+
 				return tostring(`Color3.fromRGB({r}, {g}, {b})`)
 			elseif typeof(v) == "CFrame" then
 				return tostring(`CFrame.new({v})`)
-	
+
 			elseif typeof(v) == "Vector2" then
 				return tostring(`Vector2.new({v})`)
-	
+
 			elseif typeof(v) == "Instance" then
 				return tostring(v:GetFullName())
 			end
-	
+
 			return tostring(v)
 		elseif not next(v) then
 			return '{}'
 		end
-	
+
 		spaces = spaces or 4
 		depth = depth or 1
-	
+
 		local space = (" "):rep(depth * spaces)
 		local sep = usesemicolon and ";" or ","
 		local s = "{"
-	
+
 		for k, x in next, v do
 			local kt = type(v)
 			local thing = dontConvertNumber ~= true and kt == 'number' and tostring(v)
-	
+
 			s = s .. ("\n%s[%s] = %s%s"):format(space, thing or ('"%s"'):format(tostring(k)), _conv(x, spaces, usesemicolon, depth + 1), sep)
 		end
-	
+
 		return ("%s\n%s}"):format(s:sub(1,-2), space:sub(1, -spaces-1))
 	end
-	
+
 	local _connections: {[RemoteEvent]: RBXScriptConnection} = {}
 	local _totalArgs = {}
 	local _uiargs = {}
@@ -894,24 +900,24 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 		"Minecart",
 		"Light_Fixtures"
 	}
-	
+
 	buttons.clear.MouseButton1Up:Connect(function()
 		for _, v in _uiargs do
 			pcall(function()
 				v:Destroy()
 			end)
 		end
-		
+
 		_index = 0
 		table.clear(_totalArgs)
 	end)
-	
+
 	local filtered = false
-	
+
 	main.tlButtons.filter.MouseButton1Up:Connect(function()
 		if main.togglelist.Visible == true then
 			filtered = not filtered
-			
+
 			for _, v in main.togglelist:GetChildren() do
 				if v:IsA("TextButton") then
 					if not v:GetAttribute("enabled") and filtered then
@@ -923,60 +929,60 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 			end
 		end
 	end)
-	
+
 	main.inboundlist.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	main.togglelist.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	main.inboundlist._ATemplate.args.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	main.inboundlist._ATemplate.args.AutomaticCanvasSize = Enum.AutomaticSize.XY
 	main.inboundlist._ATemplate.args.arg.AutomaticSize = Enum.AutomaticSize.XY
 	main.inboundlist._ATemplate.args.arg.RichText = true
-	
+
 	for i, remote: RemoteEvent in _REMOTESLIST do
 		if not remote:IsA("RemoteEvent") then
 			continue
 		end
-		
+
 		task.spawn(function()
 			if game.PlaceId == 0 then
 				remote.OnClientEvent:Connect(function()
-	
+
 				end)
 			end
 		end)
-		
+
 		local temp = main.togglelist._RTemplate:Clone()
 		local name: string = (remote.Parent.Name .. "." .. remote.Name)
 		local ogc: Color3 = temp.BackgroundColor3
-		
+
 		temp.Name = name
 		temp.Text = name
 		temp.Visible = true
 		temp.LayoutOrder = i
 		temp.Parent = main.togglelist
-		
+
 		temp.MouseButton1Up:Connect(function()
 			if _connections[remote] then
 				_connections[remote]:Disconnect()
 				_connections[remote] = nil
-				
+
 				temp:SetAttribute("enabled", false)
-				temp.Name = "_" .. name
-				
+				temp.Name = "*_" .. name
+
 				temp.BackgroundColor3 = ogc
 			else
 				temp:SetAttribute("enabled", true)
 				temp.Name = name
 				temp.BackgroundColor3 = Color3.fromRGB(77, 223, 99)
-				
+
 				_connections[remote] = remote.OnClientEvent:Connect(function(...)
 					if _paused then return end
-					
+
 					local args = {...}
-					
+
 					_index += 1
-					
+
 					local argTemplate = main.inboundlist._ATemplate:Clone()
 					local ts = os.clock()
-					
+
 					argTemplate.Name = tostring(_index) .. remote.Name
 					argTemplate.LayoutOrder = -_index
 					argTemplate.info:WaitForChild("timestamp").Text = math.round(ts)
@@ -984,123 +990,122 @@ local function FUCNYZO_fake_script() -- _rs.LocalScript
 					argTemplate.info:WaitForChild("remotetitle").Text = name
 					argTemplate.Visible = true
 					argTemplate.Parent = main.inboundlist
-					
+
 					table.insert(_uiargs, argTemplate)
-					
+
 					local targs = {
 						Object = nil,
 						Remote = remote:GetFullName(),
 						Timestamp = ts,
 						Room = game.ReplicatedStorage.GameData.LatestRoom.Value,
-						Candy = game.Players.LocalPlayer.Character:GetAttribute("LastCandy"),
 						Args = {}
 					}
-					
+
 					local pos: CFrame
-					
+
 					for i, arg in args do
 						if typeof(arg) == "Vector3" or typeof(arg) == "CFrame" then
 							pos = pos or arg
 						end
-						
+
 						local newArg = _conv(arg)
-						
+
 						for _, st: string in _blacklist do
 							if string.find(newArg, st) then
 								_index -= 1
-								
+
 								argTemplate:Destroy()
-								
+
 								return
 							end
 						end
-						
+
 						local param = argTemplate.args.arg:Clone()
-						
+
 						param.Visible = true
 						param.Name = i
 						param.Text = newArg
 						param.LayoutOrder = i
 						param.Parent = argTemplate.args
-						
+
 						targs.Args[i] = newArg
 					end
-					
+
 					if pos then
 						if typeof(pos) == "Vector3" then
 							pos = CFrame.new(pos)
 						end
-						
+
 						local params = OverlapParams.new()
 						params.RespectCanCollide = false
 						params.CollisionGroup = ""
-						
+
 						local potobj = workspace:GetPartBoundsInBox(pos, Vector3.new(2, 2, 2), params)
 						local firstp = nil
-						
+
 						if #potobj > 0 then
 							for _, p in potobj do
 								firstp = firstp or p
-								
+
 								local model = p:FindFirstAncestorOfClass("Model")
-	
+
 								if model then
 									targs.Object = model:GetFullName()
-									
+
 									break
 								end
 							end
 						end
-						
+
 						if not targs.Object and firstp then
 							targs.Object = firstp:GetFullName()
 						end
 					end
-					
+
 					_totalArgs[_index] = targs
 				end)
 			end
 		end)
 	end
-	
+
 	local popup = main.popup
-	
+
 	buttons.save.MouseButton1Up:Connect(function()
 		popup.Visible = true
 	end)
-	
+
 	local saves = 0
-	
+
 	popup.savefile.cancel.MouseButton1Up:Connect(function()
 		popup.Visible = false
 	end)
-	
+
 	popup.savefile.save.MouseButton1Up:Connect(function()
 		local name = popup.savefile.filename.Text
-		
+
 		if string.gsub(name, "%s+", "") == "" then
 			name = (game.ReplicatedStorage.GameData.Floor.Value) .. "_" .. tostring(os.date("%H-%M-%S"))
 		end
-		
+
 		saves += 1
-		
+
 		pcall(function()
 			print("saved", name)
-			
+
 			if not isfile("_remotelogs") then
 				makefolder("_remotelogs")
 			end
-	
+
 			local filePath = "_remotelogs/" .. name .. "_" .. tostring(saves)
-	
+
 			writefile(filePath .. ".txt", _conv(_totalArgs, 4, false, 1, true))
 		end)
-		
+
 		popup.Visible = false
 	end)
-	
-	local o = main.togglelist.UIListLayout.AbsoluteContentSize + Vector2.new(0, 40)
-	
+
+	local o = main.togglelist.UIListLayout.AbsoluteContentSize + Vector2.new(0, _RTemplate.Size.Y.Offset * 4)
+
 	main.togglelist.CanvasSize = UDim2.new(0, o.X, 0, o.Y)
 end
 coroutine.wrap(FUCNYZO_fake_script)()
