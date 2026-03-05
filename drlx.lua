@@ -710,6 +710,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = true
 			o.SaveBytecode = false
 			o.noscripts = true
+			o.SafeMode = false
 
 			dec(o, folders.decomps)
 		end,
@@ -722,6 +723,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = false
 			o.SaveBytecode = false
 			o.noscripts = true
+			o.SafeMode = false
 			o._HeaderName = "qd"
 
 			dec(o, folders.decomps)
@@ -735,6 +737,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o.SavePlayers = true
 			o.SaveBytecode = true
 			o.noscripts = true
+			o.SafeMode = false
 			
 			local savePath = `{folders.misc}/bytecode`
 
@@ -800,7 +803,8 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		end
 
 		local o = {}
-
+		
+		o.SafeMode = false
 		o.SaveBytecode = false
 		o.noscripts = true
 		o.mode = "invalid"
@@ -831,7 +835,8 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 					end
 
 					local o2 = {}
-
+					
+					o2.SafeMode = false
 					o2.noscripts = true
 					o2.mode = "invalid"
 					o2.DecompileIgnore = DecIgnore
