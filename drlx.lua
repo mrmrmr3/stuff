@@ -831,6 +831,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 		o._HeaderName = LatestRoom.Name .. " - "
 
 		if LatestRoom then
+			local SideroomIndex = 0
 			local SideroomBlacklist = {
 				"BaseSideroom",
 				"SideroomDupe",
@@ -842,6 +843,8 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 					if table.find(SideroomBlacklist, sideroom.Name) then
 						continue
 					end
+					
+					SideroomIndex += 1
 					
 					local savePath = `{folders.Siderooms}/{sideroom.Name}`
 					local folderSpecific = isfile(savePath)
@@ -859,6 +862,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 					o2.DecompileIgnore = DecIgnore
 					o2.Object = sideroom
 					o2._Name = sideroom.Name
+					o2._Header = `{LatestRoom.Name}_{SideroomIndex} - `
 					
 					dec(o2, folderSpecific, Decompile)
 
