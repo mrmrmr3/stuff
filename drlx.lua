@@ -498,6 +498,8 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	local queue = {}
 
 	local function dec(o, dest)
+		o.SafeMode = false
+		
 		local func; func = function()
 			currentlyDecompiling = true
 			local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
@@ -511,6 +513,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			o.timeout = 16384
 			o.FilePath = FilePath
 			o.ReadMe = false
+			o.SafeMode = false
 
 			local waitTime = o._WaitTime or 0
 
@@ -520,6 +523,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 				RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
 				SSI = "saveinstance",
 			}
+			print(o.SafeMode)
 			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
 			synsaveinstance(o)
 			currentlyDecompiling = false
