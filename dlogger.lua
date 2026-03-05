@@ -39,6 +39,18 @@ local Leader: Configuration = Instance.new("Configuration")
 Leader.Name = "DLOG"
 Leader.Parent = game.ReplicatedFirst
 
+local DRLX_Rooms: Folder = Instance.new("Folder")
+DRLX_Rooms.Parent = Leader
+DRLX_Rooms.Name = "Rooms"
+
+local DRLX_DecompSignal: Folder = Instance.new("BoolValue")
+DRLX_DecompSignal.Parent = Leader
+DRLX_DecompSignal.Name = "DecompSignal"
+
+local DRLX_Siderooms: Folder = Instance.new("Folder")
+DRLX_Siderooms.Parent = Leader
+DRLX_Siderooms.Name = "Siderooms"
+
 local EntityData: Folder = Instance.new("Folder")
 EntityData.Parent = Leader
 EntityData.Name = "_ENTITY_DATA"
@@ -133,10 +145,6 @@ local function newAttribute(Name: string, Parent)
 	end
 
 	table.insert(attributesIndex, Name)]]
-	if Name == "LVY" or Name == "LookVector" or Name == "Oxygen" then
-
-		return
-	end
 	
 	local index = (attributesIndex[Name] or 0) + 1
 	attributesIndex[Name] = index
@@ -157,15 +165,55 @@ LocalPlayer.AttributeChanged:Connect(function(Name: string)
 	end
 end)
 
-task.spawn(function()
-	Char = Char or LocalPlayer.CharacterAdded:Wait()
-	Char.AttributeChanged:Connect(function(Name: string)
-		local na = newAttribute(Name, CharacterAtts)
+Char.AttributeChanged:Connect(function(Name: string)
+	local na = newAttribute(Name, CharacterAtts)
 
-		if na then
-			na.Value = tostring(Char:GetAttribute(Name))
+	if na then
+		na.Value = tostring(Char:GetAttribute(Name))
+	end
+end)
+
+Char.PrimaryPart.ChildAdded:Connect(function(child)
+	if child:IsA("Light") then
+		--[[local start = os.clock()
+
+		local newchild = child:Clone()
+		newchild.Parent = Stuff
+
+		task.delay(0.05, function()
+			newchild:SetAttribute("SpeedBoost", Char:GetAttribute("SpeedBoost"))
+			newchild:SetAttribute("SpeedBoostExtra", Char:GetAttribute("SpeedBoostExtra"))
+			newchild:SetAttribute("StarlightSmall", Char:GetAttribute("StarlightSmall"))
+			newchild:SetAttribute("StarlightMedium", Char:GetAttribute("StarlightMedium"))
+			newchild:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
+			newchild:SetAttribute("LastCandy", Char:GetAttribute("LastCandy"))
+		end)
+
+		for i, _ in newchild:GetAttributes() do
+			if string.find(i, "Starlight") then
+				newchild.Name = i
+
+				break
+			end
 		end
-	end)
+
+		child:GetPropertyChangedSignal("Brightness"):Connect(function()
+			if child.Brightness == 0 then
+				newchild:SetAttribute("Duration", os.clock() - start)
+
+				local new2 = child:Clone()
+
+				new2.Name = "End"
+				new2.Parent = newchild
+				new2:SetAttribute("SpeedBoost", Char:GetAttribute("SpeedBoost"))
+				new2:SetAttribute("SpeedBoostExtra", Char:GetAttribute("SpeedBoostExtra"))
+				new2:SetAttribute("StarlightSmall", Char:GetAttribute("StarlightSmall"))
+				new2:SetAttribute("StarlightMedium", Char:GetAttribute("StarlightMedium"))
+				new2:SetAttribute("StarlightHuge", Char:GetAttribute("StarlightHuge"))
+				new2:SetAttribute("LastCandy", Char:GetAttribute("LastCandy"))
+			end
+		end)]]
+	end
 end)
 
 local function DeepClone(Object: Instance, Folder: Folder, Time: number)
@@ -264,7 +312,7 @@ local function RoomDescendantAdded(Room, Object: BasePart | Instance)
 	elseif Object:IsA("Folder") then
 		if Object.Name == "PathfindNodes" then
 			Object.Destroying:Connect(function()
-				DeepClone(Object, newRoomData(Room))
+				DeepClone(Object, Room)
 			end)
 		end
 	elseif Object:IsA("Model") then
