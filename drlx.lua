@@ -436,6 +436,12 @@ Open.TextWrapped = true
 -- Scripts:
 
 local function JSCW_fake_script() -- DRLX.LocalScript 
+	local DLOG = game.ReplicatedFirst:WaitForChild("DLOG")
+	local DLOG_ROOMS = DLOG:WaitForChild("Rooms")
+	local DLOG_SIDEROOMS = DLOG:WaitForChild("Siderooms")
+	local DLOG_DecompSignal = DLOG:WaitForChild("DecompSignal")
+	local Decompile = false
+	
 	local script = Instance.new('LocalScript', DRLX)
 	
 	local DecIgnore = {"AntiBridge", "AntiPipeGap"}
@@ -497,35 +503,42 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 	local currentlyDecompiling = false
 	local queue = {}
 
-	local function dec(o, dest)
-		o.SafeMode = false
+	local function dec(options, dest, decompImmediately)
+		options.SafeMode = false
 		
 		local func; func = function()
-			currentlyDecompiling = true
-			local decFileName = o._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
+			currentlyDecompiling = decompImmediately
+			local decFileName = options._Name or (decomps.FileName.Text ~= "" and decomps.FileName.Text) or "unnamed"
 			local TS = todate()
 
-			local FileName = ((o._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
+			local FileName = ((options._HeaderName or "") .. decFileName .. " - [" .. TS .. "] (" .. GameSeed .. ")")
 			local FilePath = ((dest and (dest .. "/")) or mainpath) .. FileName
 
 			--print("Decompiling " .. FileName)
 
-			o.timeout = 16384
-			o.FilePath = FilePath
-			o.ReadMe = false
-			o.SafeMode = false
+			options.timeout = 16384
+			options.FilePath = FilePath
+			options.ReadMe = false
+			options.SafeMode = false
 
-			local waitTime = o._WaitTime or 0
+			local waitTime = options._WaitTime or 0
 
 			task.wait(waitTime)
+			options._HeaderName = nil
+			options._WaitTime = nil
 
 			local Params = {
 				RepoURL = "https://raw.githubusercontent.com/luau/SynSaveInstance/main/",
 				SSI = "saveinstance",
 			}
-			print(o.SafeMode)
+			
 			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-			synsaveinstance(o)
+			
+			if not decompImmediately and DLOG_DecompSignal then
+				DLOG_DecompSignal:GetPropertyChangedSignal("Value"):Wait()
+			end
+			
+			synsaveinstance(options)
 			currentlyDecompiling = false
 			table.remove(queue, table.find(queue, func))
 
@@ -846,29 +859,40 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 					o2.DecompileIgnore = DecIgnore
 					o2.Object = sideroom
 					o2._Name = sideroom.Name
+					
+					dec(o2, folderSpecific, Decompile)
 
-					dec(o2, folderSpecific)
-					print(LatestRoom, LatestRoom:GetAttribute("RawName"), sideroom.Name)
+					--[[if Decompile then
+						
+					else
+						local clone = sideroom:Clone()
+						clone.Parent = DLOG_SIDEROOMS
+					end]]
 				end
 			end
-
-			dec(o, folders.Rooms)
+			
+			dec(o, folders.Rooms, Decompile)
+			
+			--[[if Decompile then
+				
+			else
+				local clone = LatestRoom:Clone()
+				clone.Parent = DLOG_ROOMS
+			end]]
 		end
 	end
 
 	RS.GameData.LatestRoom:GetPropertyChangedSignal("Value"):Connect(function()
 		task.spawn(function()
 			local nr = workspace.CurrentRooms:WaitForChild(tostring(GD_LR.Value) + 1)
-
-			task.delay(0.5, function()
-				local n = nr:FindFirstChild("PathfindNodes")
-
-				if n then
-					n = n:Clone()
-					n.Name = "PathfindNodes"
-					n.Parent = nr
-				end
-			end)
+			local paf = nr:WaitForChild("PathfindNodes")
+			
+			if paf then
+				paf.Destroying:Once(function()
+					paf = paf:Clone()
+					paf.Parent = nr
+				end)
+			end
 		end)
 
 		if toggles.LR == true then
