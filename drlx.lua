@@ -534,7 +534,7 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 			
 			local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
 			
-			if not decompImmediately and DLOG_DecompSignal then
+			if not decompImmediately and DLOG_DecompSignal and DLOG_DecompSignal.Value == false then
 				DLOG_DecompSignal:GetPropertyChangedSignal("Value"):Wait()
 			end
 			
