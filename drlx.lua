@@ -864,25 +864,31 @@ local function JSCW_fake_script() -- DRLX.LocalScript
 					o2._Name = sideroom.Name
 					o2._Header = `{LatestRoom.Name}_{SideroomIndex} - `
 					
-					dec(o2, folderSpecific, Decompile)
-
-					--[[if Decompile then
+					if Decompile then
 						
 					else
 						local clone = sideroom:Clone()
 						clone.Parent = DLOG_SIDEROOMS
-					end]]
+						o2.Object = clone
+					end
+					
+					task.spawn(function()
+						dec(o2, folderSpecific, Decompile)
+					end)
 				end
 			end
 			
-			dec(o, folders.Rooms, Decompile)
-			
-			--[[if Decompile then
+			if Decompile then
 				
 			else
 				local clone = LatestRoom:Clone()
 				clone.Parent = DLOG_ROOMS
-			end]]
+				o.Object = clone
+			end
+			
+			task.spawn(function()
+				dec(o, folders.Rooms, Decompile)
+			end)
 		end
 	end
 
